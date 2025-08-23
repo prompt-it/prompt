@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt - Hacker Courses & Tools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Sarabun:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com">
+    // Counters
+    (function(){
+      const goals=[640,220,128,84]; const ids=['c1','c2','c3','c4'];
+      ids.forEach((id,i)=>{
+        let v=0; const step=Math.max(1, Math.floor(goals[i]/90));
+        const t=setInterval(()=>{ v+=step; if(v>=goals[i]){v=goals[i]; clearInterval(t);} document.getElementById(id).textContent=v; }, 20);
+      });
+    })();
+
+    // Particles background
+    (function particles(){
+      const c=document.getElementById('particles'); if(!c) return;
+      const ctx=c.getContext('2d');
+      let w=innerWidth,h=innerHeight; c.width=w; c.height=h;
+      const dots=[...Array(80)].map(()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4}));
+      window.addEventListener('resize',()=>{ w=innerWidth; h=innerHeight; c.width=w; c.height=h; });
+      function draw(){
+        ctx.clearRect(0,0,w,h);
+        for(const d of dots){
+          d.x+=d.vx; d.y+=d.vy;
+          if(d.x<0||d.x>w) d.vx*=-1; if(d.y<0||d.y>h) d.vy*=-1;
+          ctx.beginPath(); ctx.arc(d.x,d.y,1.2,0,Math.PI*2); ctx.fillStyle='#16a34a'; ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      } draw();
+    })();
+
+    // Reveal on scroll
+    (function(){
+      const io=new IntersectionObserver(es=> es.forEach(e=> e.isIntersecting && e.target.classList.add('on')), {threshold:.15});
+      document.querySelectorAll('.card, section h3, section h4').forEach(el=>{ el.classList.add('reveal'); io.observe(el); });
+    })();
+    </script>
+  <style>
+    :root { --brand:#16a34a; --brand2:#0ea5e9; --ink:#0b1020; }
+    html{ scroll-behavior:smooth; }
+    body{ font-family:'Sarabun','Inter',system-ui; background: linear-gradient(180deg,#0b1020 0%, #0a0f1a 60%, #070b14 100%); color:#fff }
+    /* Progress Bar */
+    #progressBar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand2));width:0%;z-index:59;}
+    /* Buttons */
+    .btn-solid{background:linear-gradient(90deg,var(--brand),var(--brand2));}
+    .btn-solid:hover{filter:brightness(1.08)}
+    /* Headings underline */
+    .title-underline{position:relative;display:inline-block}
+    .title-underline:after{content:"";position:absolute;left:0;bottom:-6px;width:100%;height:3px;background:linear-gradient(90deg,var(--brand),transparent);border-radius:999px}
+    /* Cards */
+    .card{border:1px solid rgba(148,163,184,.25);transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease}
+    .card:hover{border-color:rgba(45,212,191,.6);box-shadow:0 10px 34px rgba(16,185,129,.15);transform:translateY(-2px)}
+    /* Tool quick menu */
+    #toolQuickMenu{position:fixed; right:10px; top:45%; transform:translateY(-50%); z-index:40; opacity:.55}
+    #toolQuickMenu:hover{opacity:1}
+    #toolQuickMenu a{display:block; margin:10px 0; padding:8px 10px; background:rgba(17,24,39,.85); border:1px solid rgba(255,255,255,.12); border-radius:12px; font-size:12px}
+    @media (max-width: 768px){ #toolQuickMenu{display:none} }
+    /* Scroll hint */
+    .scroll-hint{animation:floatY 1.8s ease-in-out infinite}
+    @keyframes floatY{0%{transform:translateY(0)}50%{transform:translateY(6px)}100%{transform:translateY(0)}}
+    /* News skeleton */
+    .skeleton{background:linear-gradient(90deg, rgba(255,255,255,.07) 25%, rgba(255,255,255,.12) 37%, rgba(255,255,255,.07) 63%); background-size:400% 100%; animation:shimmer 1.4s ease infinite}
+    @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+    /* Globe containers */
+    #globeContainer{height:460px; position:relative; border:1px solid rgba(255,255,255,.12); border-radius:14px; overflow:hidden;}
+    #globeFallback{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#d1d5db; font-size:14px}
+    #globeOverlay{position:absolute; right:12px; bottom:12px; background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.1); padding:10px 12px; border-radius:10px; font-size:12px}
+    /* Severity meter */
+    .meter{height:12px;background:#1f2937;border-radius:999px;border:1px solid rgba(255,255,255,.12);overflow:hidden}
+    .meter > div{height:100%;width:0%;background:linear-gradient(90deg,#10b981,#f59e0b,#ef4444);transition:width .8s ease}
+    .chip{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:rgba(17,24,39,.7)}
+    details[open] summary .rot{transform:rotate(90deg)}
+    summary{cursor:pointer}
+    /* FAQ */
+    details.faq{border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(17,24,39,.6)}
+    details.faq summary{padding:12px 14px;list-style:none}
+    details.faq[open]{box-shadow:0 8px 28px rgba(0,0,0,.25)}
+  .reveal{opacity:0;transform:translateY(10px);transition:opacity .6s ease, transform .6s ease}
+.reveal.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<canvas id="particles" style="position:fixed;inset:0;z-index:-1;opacity:.18"></canvas>
+
+  <div id="progressBar"></div>
+
+  <!-- Header -->
+  <header class="p-6 bg-black/60 backdrop-blur flex justify-between items-center border-b border-white/10">
+    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white">Prompt</h1>
+    <nav class="hidden md:flex items-center gap-6 text-sm text-gray-300">
+      <a href="#attack-hero" class="hover:text-white">ภาพรวมภัยไซเบอร์</a>
+      <a href="#welcome" class="hover:text-white">หน้าแรก</a>
+      <a href="#courses" class="hover:text-white">คอร์ส</a>
+      <a href="#tools" class="hover:text-white">เครื่องมือ</a>
+      <a href="#world-cyber" class="hover:text-white">Cyber รอบโลก</a>
+      <a href="#payment" class="hover:text-white">ชำระเงิน</a>
+      <a href="#client-info" class="hover:text-white">ข้อมูลอุปกรณ์</a>
+      <a href="#contact" class="hover:text-white">ติดต่อ</a>
+    </nav>
+<button id="hamb" class="md:hidden ml-2 px-3 py-2 rounded-md border border-white/20 text-white/90">☰</button>
+    <!-- Top-right "ดูสินค้า" button (visible on all screens) -->
+    <a href="products.html" class="ml-4 px-4 py-2 rounded-md btn-solid text-white font-semibold">ดูสินค้า</a>
+  </header>
+<div id="slideMenu" class="fixed top-0 right-0 w-64 h-full bg-gray-900/95 border-l border-white/10 backdrop-blur z-50 translate-x-full transition-transform">
+  <div class="p-4 text-white font-bold text-lg">เมนู</div>
+  <nav class="p-2 text-gray-200 space-y-1">
+    <a href="#welcome" class="block px-4 py-2 hover:bg-white/5">หน้าแรก</a>
+    <a href="#services" class="block px-4 py-2 hover:bg-white/5">บริการ</a>
+    <a href="#courses" class="block px-4 py-2 hover:bg-white/5">คอร์ส</a>
+    <a href="#tools" class="block px-4 py-2 hover:bg-white/5">เครื่องมือ</a>
+    <a href="#world-cyber" class="block px-4 py-2 hover:bg-white/5">Cyber รอบโลก</a>
+    <a href="#payment" class="block px-4 py-2 hover:bg-white/5">ชำระเงิน</a>
+    <a href="#client-info" class="block px-4 py-2 hover:bg-white/5">ข้อมูลอุปกรณ์</a>
+    <a href="products.html" class="block px-4 py-2 hover:bg-white/5">สินค้า</a>
+    <a href="#faq" class="block px-4 py-2 hover:bg-white/5">ถาม‑ตอบ</a>
+  </nav>
+</div>
+
+<!-- Welcome / Hero -->
+  <section id="welcome" style="position:relative;overflow:hidden" class="px-6 md:px-10 py-12 md:py-16">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-tight text-white">ยินดีต้อนรับสู่ <span class="text-emerald-400">Prompt</span></h2><div class="mt-2 text-sm text-emerald-300 codeband">System.ready &nbsp;››&nbsp; Hardening • Audit • Red/Blue Team • DevSecOps</div>
+        <p class="text-gray-300 mt-4 md:text-lg">แพลตฟอร์มเรียนรู้และเครื่องมือสำหรับสาย Cybersecurity ที่ <span class="font-semibold text-emerald-300">ออนไลน์อัตโนมัติ 24 ชม.</span> — ทีมแอดมินพร้อมตอบ 20:00–22:00 น. เท่านั้น</p>
+        <blockquote class="mt-6 text-gray-200 italic border-l-2 border-white/20 pl-4">“แฮกเกอร์ไม่ได้ค้นหาช่องโหว่เพราะอยากทำลาย แต่เพื่อให้โลกดิจิทัลปลอดภัยขึ้น”</blockquote>
+        <div class="mt-6 flex flex-wrap gap-3"><a href="#services" class="px-5 py-3 rounded-md btn-solid text-white font-semibold">ดูบริการพัฒนา/ความปลอดภัย</a>
+          <a href="https://www.facebook.com/share/1YxCGFEGvW/" target="_blank" class="px-5 py-3 rounded-md btn-solid text-white font-semibold">สอบถาม/สั่งซื้อ</a>
+          <a href="#courses" class="px-5 py-3 rounded-md border border-white/20 text-white/90 hover:bg-white/5">เริ่มจากคอร์สเรียน</a>
+          <a href="products.html" class="px-5 py-3 rounded-md border border-white/20 text-white/90 hover:bg-white/5">ดูสินค้าไอที</a>
+        </div>
+        <div class="mt-6 flex items-center gap-2 text-sm text-gray-300">
+          <span class="scroll-hint text-2xl">↓</span> เลื่อนลงเพื่อดูรายละเอียดทั้งหมด
+        </div>
+      </div>
+      <div class="bg-gray-800/60 border border-white/10 rounded-xl p-6 md:p-8">
+        <p class="text-sm uppercase tracking-wider text-emerald-300 font-semibold">ระบบ</p>
+        <h3 class="mt-2 text-2xl font-bold">ออนไลน์ 24/7 (อัตโนมัติ)</h3>
+        <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+          <div class="bg-black/30 p-3 rounded border border-white/10">
+            <div class="text-gray-400">สถานะระบบ</div>
+            <div class="font-semibold text-emerald-300">พร้อมให้บริการ</div>
+          </div>
+          <div class="bg-black/30 p-3 rounded border border-white/10">
+            <div class="text-gray-400">เวลาตอบแอดมิน</div>
+            <div class="font-semibold">20:00–22:00 น.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-28 opacity-[0.08] codeband text-center select-none">{ console.log("Prompt › Secure by Design"); }</div></section>
+
+
+  
+
+
+  <!-- Divider -->
+  <section class="px-6 md:px-10"><hr class="border-t border-emerald-700/40 my-10"></section>
+
+  <!-- Services: Coding & Backend Security -->
+  <section id="services" class="px-6 md:px-10 py-12">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-2xl font-bold title-underline">บริการพัฒนา & ตรวจสอบความปลอดภัย</h3>
+      <div class="mt-6 grid md:grid-cols-3 gap-6">
+        <div class="card rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">เขียนโค้ด/วางระบบโปรแกรม</h4>
+          <ul class="list-disc list-inside text-gray-300 text-sm mt-2 space-y-1">
+            <li>เว็บแอป/E‑Commerce/Portal</li>
+            <li>ระบบภายในองค์กร (Workflow/ERP/CRM)</li>
+            <li>API/Microservices/Cloud‑native</li>
+            <li>IoT/Edge/Automation</li>
+          </ul>
+          <a href="https://www.facebook.com/share/1YxCGFEGvW/" target="_blank" class="mt-4 inline-block px-4 py-2 rounded-md btn-solid text-white font-semibold">ขอใบเสนอราคา</a>
+        </div>
+        <div class="card rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ดูแลหลังบ้าน & แข็งแรงระบบ</h4>
+          <ul class="list-disc list-inside text-gray-300 text-sm mt-2 space-y-1">
+            <li>RBAC/SSO, Audit Logs, Backup/Restore</li>
+            <li>Observability (Metrics/Logs/Tracing)</li>
+            <li>Rate‑limit, WAF/Reverse Proxy, Caching</li>
+            <li>CI/CD, Infra as Code</li>
+          </ul>
+          <div class="text-xs text-gray-400 mt-3">* ลูกค้าสามารถตรวจดูงานก่อนจ่ายจริงได้</div>
+        </div>
+        <div class="card rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ตรวจเช็คความปลอดภัยภายใน (Back‑office Security)</h4>
+          <ul class="list-disc list-inside text-gray-300 text-sm mt-2 space-y-1">
+            <li>Hardening เซิร์ฟเวอร์/ฐานข้อมูล</li>
+            <li>Config Review (S3, IAM, Firewall, Secrets)</li>
+            <li>Vulnerability Scanning & Fix Plan</li>
+            <li>Table‑top Incident Drill</li>
+          </ul>
+          <div class="mt-3 text-sm"><span class="font-semibold text-white">การรับประกัน 6 เดือน</span> — ครอบคลุมการแก้ไขที่เราดำเนินการ <span class="text-gray-400">(หากลูกค้าแก้ไขเอง ถือว่าประกันสิ้นสุดทันที)</span></div>
+        </div>
+      <div class="card bg-gray-800 rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ความปลอดภัยอุปกรณ์มือถือ</h4>
+          <div id="mobileSec" class="mt-3 text-gray-200 text-sm">กำลังตรวจสอบ...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search -->
+  <section id="search" class="px-6 md:px-10 py-10">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-2xl font-bold title-underline">ค้นหาคอร์ส & สินค้า</h3>
+      <div class="mt-4">
+        <input id="searchInput" type="text" placeholder="พิมพ์ชื่อคอร์สหรือสินค้า..."
+               class="w-full md:w-2/3 lg:w-1/2 px-4 py-3 rounded-md text-black focus:outline-none">
+      <div class="card bg-gray-800 rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ความปลอดภัยอุปกรณ์มือถือ</h4>
+          <div id="mobileSec" class="mt-3 text-gray-200 text-sm">กำลังตรวจสอบ...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Courses -->
+  <section id="courses" class="px-6 md:px-10 py-12">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-2xl font-bold title-underline">คอร์สทั้งหมด</h3>
+      <p class="text-gray-300 mt-2">Offensive / Defensive / Back-office ขั้นสูง พร้อมภาคปฏิบัติ</p>
+
+      <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6 searchable">
+        <div class="card bg-gray-800 rounded-xl p-6">
+          <div class="flex items-center justify-between"><h4 class="font-semibold">พื้นฐาน Ethical Hacking</h4><span class="text-xs px-2 py-1 rounded bg-emerald-600/20 text-emerald-300">ยอดนิยม</span></div>
+          <p class="text-gray-300 mt-2">เริ่มจาก 0 สู่ความเข้าใจด้านความปลอดภัยไซเบอร์</p><p class="font-bold text-emerald-400 mt-3">฿999</p>
+        </div>
+        <div class="card bg-gray-800 rounded-xl p-6"><div class="flex items-center justify-between"><h4 class="font-semibold">Penetration Testing มืออาชีพ</h4><span class="text-xs px-2 py-1 rounded bg-sky-600/20 text-sky-300">แนะนำ</span></div><p class="text-gray-300 mt-2">กระบวนการทดสอบเจาะระบบแบบมืออาชีพ</p><p class="font-bold text-emerald-400 mt-3">฿1,490</p></div>
+        <div class="card bg-gray-800 rounded-xl p-6"><h4 class="font-semibold">Red Team Simulation</h4><p class="text-gray-300 mt-2">วางแผนโจมตีจำลองทั้งองค์กร พร้อมรายงาน</p><p class="font-bold text-emerald-400 mt-3">฿2,490</p></div>
+        <div class="card bg-gray-800 rounded-xl p-6"><h4 class="font-semibold">Blue Team & SIEM Operations</h4><p class="text-gray-300 mt-2">วิเคราะห์เหตุการณ์และตั้งค่า SIEM/Alert Rule</p><p class="font-bold text-emerald-400 mt-3">฿1,990</p></div>
+        <div class="card bg-gray-800 rounded-xl p-6"><h4 class="font-semibold">Web App Security (OWASP Top 10)</h4><p class="text-gray-300 mt-2">เจาะช่องโหว่เว็บยอดฮิตและการป้องกัน</p><p class="font-bold text-emerald-400 mt-3">฿1,690</p></div>
+        <div class="card bg-gray-800 rounded-xl p-6">
+          <div class="flex items-center justify-between"><h4 class="font-semibold">การดูแลระบบหลังบ้านขั้นสูง (Advanced Back-office)</h4><span class="text-xs px-2 py-1 rounded bg-fuchsia-600/20 text-fuchsia-300">ใหม่</span></div>
+          <p class="text-gray-300 mt-2">RBAC/SSO, Audit logs, Backup/Restore, Observability, Rate-limit</p><p class="font-bold text-emerald-400 mt-3">฿2,590</p>
+        </div>
+      <div class="card bg-gray-800 rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ความปลอดภัยอุปกรณ์มือถือ</h4>
+          <div id="mobileSec" class="mt-3 text-gray-200 text-sm">กำลังตรวจสอบ...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Threat Highlights (static) -->
+  <section id="threats" class="px-6 md:px-10 py-10">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-2xl font-bold title-underline">ภัยไซเบอร์ที่ควรรู้</h3>
+      <div class="mt-6 grid md:grid-cols-3 gap-6">
+        <div class="card rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">Phishing & Social Engineering</h4>
+          <p class="text-gray-300 mt-2 text-sm">ลวงให้เปิดเผยรหัส/ข้อมูลสำคัญผ่านอีเมล/แชท/โทรศัพท์—ป้องกันด้วยการตรวจโดเมน, ไม่คลิกลิงก์สุ่มสี่สุ่มห้า, เปิด MFA</p>
+        </div>
+        <div class="card rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">Ransomware & Data Breach</h4>
+          <p class="text-gray-300 mt-2 text-sm">มัลแวร์เข้ารหัสข้อมูลเรียกค่าไถ่—สำรองแบบ 3‑2‑1, อัปเดตแพตช์, ฝึกซ้อมรับมือเหตุการณ์</p>
+        </div>
+        <div class="card rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">Zero‑day & Supply Chain</h4>
+          <p class="text-gray-300 mt-2 text-sm">ช่องโหว่ที่ยังไม่มีแพตช์/กระทบซัพพลายเชน—เฝ้าระวัง CVE, ใช้การแบ่งส่วนเครือข่าย, ควบคุมสิทธิ์เข้าถึง</p>
+        </div>
+      </div>
+      <div class="mt-6 grid md:grid-cols-4 gap-4 text-center text-sm">
+        <div class="card rounded-xl p-4"><div class="text-emerald-300 font-bold text-2xl" id="c1">0</div><div class="text-gray-300 mt-1">การแจ้งเตือนจำลอง</div></div>
+        <div class="card rounded-xl p-4"><div class="text-emerald-300 font-bold text-2xl" id="c2">0</div><div class="text-gray-300 mt-1">เหตุการณ์ฝึกซ้อม</div></div>
+        <div class="card rounded-xl p-4"><div class="text-emerald-300 font-bold text-2xl" id="c3">0</div><div class="text-gray-300 mt-1">รายการแพตช์</div></div>
+        <div class="card rounded-xl p-4"><div class="text-emerald-300 font-bold text-2xl" id="c4">0</div><div class="text-gray-300 mt-1">โครงการ Harden</div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Divider -->
+  <section class="px-6 md:px-10"><hr class="border-t border-emerald-700/40 my-10"></section>
+
+  <!-- Tools -->
+  <section id="tools" class="px-6 md:px-10 py-10">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-2xl font-bold title-underline">เครื่องมือ Cyber</h3>
+
+      <!-- Right-side floating quick menu -->
+      <nav id="toolQuickMenu" aria-label="Tool quick jump">
+        <a href="#tool-hash">Hash</a>
+        <a href="#tool-base64">Base64</a>
+        <a href="#tool-password">Password</a>
+        <a href="#tool-ip">IP</a>
+        <a href="#tool-phone">Phone</a>
+      </nav>
+<button id="hamb" class="md:hidden ml-2 px-3 py-2 rounded-md border border-white/20 text-white/90">☰</button>
+
+      <!-- Hash -->
+      <div id="tool-hash" class="mt-8">
+        <h4 class="text-xl font-semibold text-emerald-300">🔑 Hash Generator</h4>
+        <input id="hashInput" class="w-full md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder="ข้อความ">
+        <button id="btnHash" class="mt-3 px-5 py-2 rounded-md btn-solid text-white font-semibold">Generate</button>
+        <div id="hashResult" class="mt-3 text-gray-300 text-sm"></div>
+      </div>
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- Base64 -->
+      <div id="tool-base64">
+        <h4 class="text-xl font-semibold text-emerald-300">🔐 Base64 Encode / Decode</h4>
+        <textarea id="b64Input" class="w-full md:w-2/3 lg:w-1/2 h-28 px-4 py-2 rounded text-black mt-3"></textarea>
+        <div class="mt-3 flex gap-2">
+          <button id="btnEncode" class="px-4 py-2 rounded-md btn-solid text-white font-semibold">Encode</button>
+          <button id="btnDecode" class="px-4 py-2 rounded-md btn-solid text-white font-semibold">Decode</button>
+        </div>
+        <div id="b64Result" class="mt-3 text-gray-300 text-sm break-all"></div>
+      </div>
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- Password Strength -->
+      <div id="tool-password">
+        <h4 class="text-xl font-semibold text-emerald-300">🕵️ Password Strength Checker</h4>
+        <div class="mt-3 grid md:grid-cols-2 gap-3 items-end">
+          <input type="password" id="passwordInput" class="w-full px-4 py-2 rounded text-black" placeholder="รหัสผ่าน">
+          <button id="btnStrength" class="px-5 py-2 rounded-md btn-solid text-white font-semibold">ตรวจสอบความปลอดภัย</button>
+        </div>
+        <div id="strengthResult" class="mt-3 text-lg font-semibold"></div>
+        <div class="meter mt-2 w-full md:w-2/3 lg:w-1/2"><div id="strengthFill"></div></div>
+        <p class="text-xs text-gray-400 mt-2">* ตัวประเมินแบบเบื้องต้นเพื่อให้ตระหนักรู้ ควรใช้ตัวจัดการรหัสผ่านและเปิด MFA</p>
+      </div>
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- IP Checker (manual) -->
+      <div id="tool-ip">
+        <h4 class="text-xl font-semibold text-emerald-300">🌐 IP Checker (ระบุ IP เอง)</h4>
+        <input id="ipInput" class="w-full md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder="8.8.8.8">
+        <button id="btnIP" class="mt-3 px-5 py-2 rounded-md btn-solid text-white font-semibold">ตรวจสอบ</button>
+        <div id="ipResult" class="mt-3 text-gray-300 text-sm"></div>
+      </div>
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- Phone Checker -->
+      <div id="tool-phone">
+        <h4 class="text-xl font-semibold text-emerald-300">📱 Phone Checker</h4>
+        <input id="phoneInput" class="w-full md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder="0812345678">
+        <button id="btnPhone" class="mt-3 px-5 py-2 rounded-md btn-solid text-white font-semibold">ตรวจสอบ</button>
+        <div id="phoneResult" class="mt-3 text-gray-300 text-sm"></div>
+      <div class="card bg-gray-800 rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ความปลอดภัยอุปกรณ์มือถือ</h4>
+          <div id="mobileSec" class="mt-3 text-gray-200 text-sm">กำลังตรวจสอบ...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <section class="px-6 md:px-10"><hr class="border-t border-emerald-700/40 my-10"></section>
+
+  <!-- Cyber World News -->
+  <section id="world-cyber" class="px-6 md:px-10 py-12">
+    <div class="max-w-6xl mx-auto">
+      \1
+    <button id="newsToggle" class="mt-4 px-4 py-2 rounded-md btn-solid text-white font-semibold">แสดงข่าวทั้งหมด</button>
+    <div id="newsWrap" class="mt-4 hidden">
+      <div id="newsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="card bg-gray-800 rounded-xl p-5 skeleton h-36"></div>
+        <div class="card bg-gray-800 rounded-xl p-5 skeleton h-36"></div>
+        <div class="card bg-gray-800 rounded-xl p-5 skeleton h-36"></div>
+      </div>
+    </div>
+        <div class="card bg-gray-800 rounded-xl p-5 skeleton h-36"></div>
+        <div class="card bg-gray-800 rounded-xl p-5 skeleton h-36"></div>
+      <div class="card bg-gray-800 rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ความปลอดภัยอุปกรณ์มือถือ</h4>
+          <div id="mobileSec" class="mt-3 text-gray-200 text-sm">กำลังตรวจสอบ...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <section class="px-6 md:px-10"><hr class="border-t border-emerald-700/40 my-10"></section>
+
+  <!-- Payment (KBank) -->
+  <section id="payment" class="px-6 md:px-10 py-12">
+    <div class="max-w-6xl mx-auto text-center">
+      <h3 class="text-2xl font-bold title-underline">ชำระเงินผ่านธนาคารกสิกรไทย (KBank)</h3>
+      <p class="mt-2 text-gray-300">ชื่อบัญชี: <span class="font-semibold text-white">โยธาศักดิ์ โชคทวีสถาพร</span></p>
+
+      <div class="mt-6 grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+        <div class="card rounded-xl p-4 text-left">
+          <div class="text-gray-300 text-sm">บัญชี 1</div>
+          <div class="text-xl font-bold mt-1">160-2-80805-6</div>
+          <button class="mt-3 px-4 py-2 rounded-md btn-solid text-white font-semibold" onclick="copyText('160-2-80805-6')">คัดลอกเลขบัญชี</button>
+        </div>
+        <div class="card rounded-xl p-4 text-left">
+          <div class="text-gray-300 text-sm">บัญชี 2</div>
+          <div class="text-xl font-bold mt-1">172-8-22029-1</div>
+          <button class="mt-3 px-4 py-2 rounded-md btn-solid text-white font-semibold" onclick="copyText('172-8-22029-1')">คัดลอกเลขบัญชี</button>
+        </div>
+      </div>
+
+      <div class="mt-4 text-sm text-gray-400">* หลังโอนแล้วอัปโหลดสลิปเพื่อตรวจสอบอัตโนมัติด้านล่าง (ไม่เก็บสลิปในระบบ)</div>
+
+      <form id="slipForm" class="space-y-4 mt-6">
+        <input type="file" id="slipFile" accept="image/*" required 
+               class="block mx-auto text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 
+                      file:rounded file:border-0 file:bg-emerald-600 file:text-white hover:file:bg-emerald-700">
+        <button type="submit" class="px-6 py-2 rounded-md btn-solid text-white font-semibold">อัปโหลดสลิป</button>
+      </form>
+      <div id="result" class="mt-6 hidden bg-gray-800/80 p-6 rounded-lg max-w-xl mx-auto text-left border border-white/10">
+        <h4 class="text-lg font-bold text-emerald-300">รายละเอียดจากสลิป</h4>
+        <ul id="slipDetails" class="mt-2 text-gray-200 text-sm space-y-1"></ul>
+        <p class="text-xs text-gray-400 mt-2">* ระบบอ่านข้อความจากภาพเพื่อแสดงผลเท่านั้น ไม่บันทึกไฟล์/ข้อมูลใด ๆ</p>
+      <div class="card bg-gray-800 rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ความปลอดภัยอุปกรณ์มือถือ</h4>
+          <div id="mobileSec" class="mt-3 text-gray-200 text-sm">กำลังตรวจสอบ...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <section class="px-6 md:px-10"><hr class="border-t border-emerald-700/40 my-10"></section>
+
+  <!-- Client Info -->
+  <section id="client-info" class="px-6 md:px-10 py-12">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-2xl font-bold title-underline">รายละเอียดอุปกรณ์ของคุณ</h3>
+      <p class="text-gray-300 mt-2">ระบบจะแสดงโดยอัตโนมัติเมื่อคุณเลื่อนมาถึงส่วนนี้</p>
+      <div id="clientBox" class="mt-6 grid md:grid-cols-3 gap-6">
+        <div class="card bg-gray-800 rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ข้อมูลเครือข่าย (IP / ISP / ที่ตั้ง)</h4>
+          <div id="clientNetwork" class="mt-3 text-gray-200 text-sm">กำลังรอการตรวจสอบ...</div>
+        </div>
+        <div class="card bg-gray-800 rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ข้อมูลอุปกรณ์/เบราว์เซอร์ (ละเอียด)</h4>
+          <div id="clientDevice" class="mt-3 text-gray-200 text-sm">กำลังรอการตรวจสอบ...</div>
+        </div>
+      <div class="card bg-gray-800 rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ความปลอดภัยอุปกรณ์มือถือ</h4>
+          <div id="mobileSec" class="mt-3 text-gray-200 text-sm">กำลังตรวจสอบ...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="px-6 md:px-10 py-12">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-2xl font-bold title-underline">ถาม‑ตอบ เกี่ยวกับแฮกเกอร์</h3>
+      <div class="mt-6 grid md:grid-cols-2 gap-4">
+        <details class="faq"><summary><b>1) แฮกเกอร์คืออะไร?</b></summary><div class="p-4 pt-0 text-gray-300">คือผู้ที่ใช้ความรู้ทางเทคนิคเพื่อสำรวจ/ปรับแก้ระบบ อาจเป็นเชิงรุก (offensive) หรือเชิงรับ (defensive) เป้าหมายขึ้นกับเจตนา</div></details>
+        <details class="faq"><summary><b>2) ต่างกันอย่างไรระหว่าง White‑hat / Black‑hat / Grey‑hat?</b></summary><div class="p-4 pt-0 text-gray-300">White‑hat ทำงานถูกกฎหมาย/ได้รับอนุญาต, Black‑hat ผิดกฎหมายหวังผลประโยชน์, Grey‑hat อยู่กึ่งกลาง</div></details>
+        <details class="faq"><summary><b>3) จะเริ่มเรียนสาย Security ต้องรู้อะไรก่อน?</b></summary><div class="p-4 pt-0 text-gray-300">พื้นฐานระบบปฏิบัติการ, เครือข่าย, Web/HTTP, การเขียนสคริปต์ (Python/Bash), ความปลอดภัยขั้นต่ำ</div></details>
+        <details class="faq"><summary><b>4) ต้องใช้เครื่องมืออะไรบ้าง?</b></summary><div class="p-4 pt-0 text-gray-300">เช่น Burp Suite, Nmap, Wireshark, Metasploit, Hashcat, SIEM/EDR ตามงาน</div></details>
+        <details class="faq"><summary><b>5) การทดสอบเจาะระบบผิดกฎหมายไหม?</b></summary><div class="p-4 pt-0 text-gray-300">ผิด หากไม่มีหนังสืออนุญาต/ขอบเขตที่ชัดเจน (Rules of Engagement)</div></details>
+        <details class="faq"><summary><b>6) จะป้องกัน Phishing ได้อย่างไร?</b></summary><div class="p-4 pt-0 text-gray-300">ตรวจโดเมน/อีเมล, ไม่คลิกลิงก์แปลก, ใช้ MFA, ใช้ตัวจัดการรหัสผ่าน และเปิดการแจ้งเตือน Login</div></details>
+        <details class="faq"><summary><b>7) รหัสผ่านปลอดภัยควรเป็นแบบไหน?</b></summary><div class="p-4 pt-0 text-gray-300">ยาว 12–16 ตัวอักษรขึ้นไป ผสม a‑z, A‑Z, 0‑9, สัญลักษณ์ และไม่ซ้ำบริการ ใช้ MFA เสมอ</div></details>
+        <details class="faq"><summary><b>8) Zero‑day คืออะไร?</b></summary><div class="p-4 pt-0 text-gray-300">ช่องโหว่ที่ยังไม่ถูกเปิดเผย/ยังไม่มีแพตช์ ทำให้ผู้โจมตีมีโอกาสใช้ก่อนผู้พัฒนาจะแก้ไข</div></details>
+        <details class="faq"><summary><b>9) สำรองข้อมูลแบบ 3‑2‑1 คือ?</b></summary><div class="p-4 pt-0 text-gray-300">มีสำเนา 3 ชุด เก็บ 2 สื่อแตกต่าง และ 1 ชุดอยู่นอกสถานที่/ออฟไลน์</div></details>
+        <details class="faq"><summary><b>10) เริ่มอาชีพสาย Cyber ต้องทำอย่างไร?</b></summary><div class="p-4 pt-0 text-gray-300">ฝึก Lab จริง, ทำ CTF, อ่าน OWASP/NIST, ทำพอร์ตโฟลิโอ และเรียนคอร์สที่มีภาคปฏิบัติ</div></details>
+      <div class="card bg-gray-800 rounded-xl p-6">
+          <h4 class="font-semibold text-emerald-300">ความปลอดภัยอุปกรณ์มือถือ</h4>
+          <div id="mobileSec" class="mt-3 text-gray-200 text-sm">กำลังตรวจสอบ...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact" class="px-6 md:px-10 py-10 bg-black/70 text-center text-gray-300 border-t border-white/10">
+    <div class="max-w-6xl mx-auto">
+      <p class="font-semibold">ติดต่อ Prompt</p>
+      <p class="mt-1">Facebook: <a class="text-emerald-400 underline" target="_blank" href="https://www.facebook.com/share/1YxCGFEGvW/">คลิกที่นี่</a> • โทร: <a class="text-emerald-400 underline" href="tel:0918715814">091-871-5814</a></p>
+      <p class="mt-6 text-xs text-gray-400">© 2025 Prompt – Hacker Courses & Tools</p>
+    </div>
+  </footer>
+
+  <!-- Floating Contact -->
+  <div class="fixed bottom-6 right-6 z-50">
+    <button id="fab" class="bg-emerald-600 text-white p-4 rounded-full shadow-xl">☰</button>
+    <div id="fabMenu" class="flex flex-col items-end space-y-3 mt-3 hidden">
+      <a href="https://www.facebook.com/share/1YxCGFEGvW/" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg">F</a>
+      <a href="tel:0918715814" class="bg-emerald-600 hover:bg-emerald-700 text-white p-3 rounded-full shadow-lg">📞</a>
+    </div>
+  </div>
+
+  <!-- Scripts & libs -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script><!-- Fallback Globe.gl -->
+
+  <script>
+    // Helpers
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
+    const on = (el, ev, fn) => el && el.addEventListener(ev, fn);
+    function copyText(t){ navigator.clipboard.writeText(t).then(()=>{ const x=document.createElement('div'); x.textContent='คัดลอกแล้ว'; x.className='fixed bottom-6 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-3 py-2 rounded-md'; document.body.appendChild(x); setTimeout(()=>x.remove(),1200); }); }
+
+    // Progress bar
+    on(window,'scroll',()=>{
+      const sc=window.scrollY, h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+      const bar=$("#progressBar"); if(bar) bar.style.width=(sc/h)*100+"%";
+    });
+
+    // FAB
+    on($("#fab"),'click',()=> $("#fabMenu").classList.toggle("hidden"));
+
+    // Search in courses
+    on($("#searchInput"),'input',()=>{
+      const q=$("#searchInput").value.toLowerCase();
+      $$("#courses .card").forEach(el=> el.style.display = el.textContent.toLowerCase().includes(q) ? "" : "none");
+    });
+
+    // Payment OCR (no storage)
+    on($("#slipForm"),'submit',function(e){
+      e.preventDefault();
+      const file=$("#slipFile")?.files?.[0]; if(!file) return;
+      const box=$("#result"), ul=$("#slipDetails");
+      box.classList.remove("hidden"); ul.innerHTML="⏳ กำลังอ่านสลิป...";
+      Tesseract.recognize(file,'eng+tha').then(({data:{text}})=>{
+        const time=text.match(/([0-9]{1,2}:[0-9]{2})/);
+        const date=text.match(/([0-9]{1,2}\s?[ก-๙]+\s?[0-9]{4})/);
+        const amount=text.match(/([0-9,]+\.\d{2})\s?บาท/);
+        const ref=text.match(/Ref[:\s]*([0-9]+)/i);
+        const bank=text.match(/กสิกร|KBank|Kasikorn/i);
+        ul.innerHTML=`<li>📅 วันที่: ${date?date[0]:"ไม่พบ"}</li>
+                      <li>⏱ เวลา: ${time?time[0]:"ไม่พบ"}</li>
+                      <li>💵 จำนวนเงิน: ${amount?amount[0]:"ไม่พบ"}</li>
+                      <li>🏦 ธนาคาร: ${bank?bank[0]:"ไม่พบ/อื่นๆ"}</li>
+                      <li>🔑 เลขอ้างอิง: ${ref?ref[1]:"ไม่พบ"}</li>`;
+      }).catch(()=> ul.innerHTML="<li class='text-red-400'>❌ อ่านสลิปไม่สำเร็จ</li>");
+    });
+
+    // Tools: Hash/Base64/Strength
+    on($("#btnHash"),'click',()=>{
+      const text=$("#hashInput")?.value; if(!text) return;
+      $("#hashResult").innerHTML = `<p><b>MD5:</b> ${CryptoJS.MD5(text).toString()}</p>
+        <p><b>SHA1:</b> ${CryptoJS.SHA1(text).toString()}</p>
+        <p><b>SHA256:</b> ${CryptoJS.SHA256(text).toString()}</p>`;
+    });
+    on($("#btnEncode"),'click',()=>{ const t=$("#b64Input")?.value; if(!t) return; $("#b64Result").innerHTML=`<p><b>Encoded:</b> ${btoa(t)}</p>`; });
+    on($("#btnDecode"),'click',()=>{ const t=$("#b64Input")?.value; if(!t) return; try{ $("#b64Result").innerHTML=`<p><b>Decoded:</b> ${atob(t)}</p>`; } catch{ $("#b64Result").innerHTML=`<p class='text-red-400'>❌ ไม่ใช่ Base64</p>`; } });
+    function strengthScore(pw){
+      if(!pw) return 0;
+      let s = Math.min(10, Math.floor(pw.length/2));
+      if(/[a-z]/.test(pw)) s+=2;
+      if(/[A-Z]/.test(pw)) s+=2;
+      if(/[0-9]/.test(pw)) s+=2;
+      if(/[^A-Za-z0-9]/.test(pw)) s+=3;
+      if(/(.)\1{2,}/.test(pw)) s-=2;
+      return Math.max(0, Math.min(20, s));
+    }
+    on($("#btnStrength"),'click',()=>{
+      const pw=$("#passwordInput")?.value||"";
+      const sc=strengthScore(pw);
+      const pct=Math.round((sc/20)*100);
+      const label=pct<30?'อ่อน':pct<60?'ปานกลาง':pct<85?'ดี':'แข็งแกร่ง';
+      $("#strengthFill").style.width=pct+"%";
+      $("#strengthResult").textContent = `ความปลอดภัยรหัสผ่าน: ${label} (${pct}%)`;
+    });
+
+    // IP / Phone
+    on($("#btnIP"),'click',()=>{
+      const ip=$("#ipInput")?.value?.trim(); const out=$("#ipResult"); if(!ip) return; out.textContent="⏳ ตรวจสอบ...";
+      fetch(`https://ip-api.com/json/${ip}?lang=th`).then(r=>r.json()).then(d=>{
+        if(d.status==="fail"){ out.textContent="❌ ไม่พบ"; return; }
+        out.innerHTML = `📍 ประเทศ: ${d.country} (${d.countryCode})<br>🏙️ เมือง: ${d.city}<br>🌍 ISP: ${d.isp}<br>⏱️ Timezone: ${d.timezone}`;
+      }).catch(()=> out.textContent="❌ API ล้มเหลว");
+    });
+    on($("#btnPhone"),'click',()=>{
+      const phone=$("#phoneInput")?.value?.trim(); const out=$("#phoneResult"); if(!phone) return; out.textContent="⏳ ตรวจสอบ...";
+      const prefix=phone.substring(0,3);
+      const ais=["080","081","082","089","090","091"], dtac=["083","084","085","093","094"], trueh=["086","087","088","092","095","096"], other=["097","098","099"];
+      let op="ไม่ทราบค่าย"; if(ais.includes(prefix)) op="AIS"; else if(dtac.includes(prefix)) op="DTAC"; else if(trueh.includes(prefix)) op="TrueMove H"; else if(other.includes(prefix)) op="อาจเป็นเครือข่ายใหม่/ย้ายค่าย";
+      out.innerHTML = `📱 เบอร์: ${phone}<br>📡 ค่าย: <span class="text-emerald-400 font-bold">${op}</span>`;
+    });
+
+    // Auto client info
+    let clientLoaded=false;
+    const obs=new IntersectionObserver((entries)=>{
+      const e=entries[0]; if(!e.isIntersecting || clientLoaded) return; clientLoaded=true;
+      const dev={
+        language:navigator.language,userAgent:navigator.userAgent,platform:navigator.platform,
+        cookieEnabled:navigator.cookieEnabled,online:navigator.onLine,
+        colorDepth:screen.colorDepth,pixelRatio:devicePixelRatio,
+        screen:`${screen.width}x${screen.height}`,viewport:`${innerWidth}x${innerHeight}`,
+        cores:navigator.hardwareConcurrency||'N/A',memory:(navigator.deviceMemory||'N/A')+' GB',
+        timezone:Intl.DateTimeFormat().resolvedOptions().timeZone,doNotTrack:navigator.doNotTrack||'unspecified',
+        touch:('ontouchstart' in window)?'รองรับ':'ไม่รองรับ',referrer:document.referrer||'—'
+      };
+      const devBox=$("#clientDevice"); if(devBox){
+        devBox.innerHTML = `
+          🌐 ภาษา: ${dev.language}<br>💻 แพลตฟอร์ม: ${dev.platform}<br>🧭 เบราว์เซอร์: ${dev.userAgent}<br>
+          🍪 Cookies: ${dev.cookieEnabled} • 📶 Online: ${dev.online}<br>
+          🎨 Color depth: ${dev.colorDepth} • DPR: ${dev.pixelRatio}<br>
+          🧠 CPU Cores: ${dev.cores} • RAM (approx): ${dev.memory}<br>
+          🖥️ หน้าจอ: ${dev.screen} • Viewport: ${dev.viewport}<br>
+          ⏱️ Timezone: ${dev.timezone} • DNT: ${dev.doNotTrack}<br>
+          🔗 Referrer: ${dev.referrer}<br>
+          ⚠️ ข้อมูลนี้แสดงเฉพาะบนหน้า ไม่ถูกจัดเก็บ
+        `;
+      }
+      fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(ipd=>{
+        const ip=ipd.ip;
+        return fetch(`https://ip-api.com/json/${ip}?lang=th`).then(r=>r.json()).then(info=>({ip,info}));
+      }).then(({ip,info})=>{
+        const net=$("#clientNetwork");
+        if(!net) return;
+        if(info.status==="fail"){ net.textContent="ไม่สามารถตรวจสอบ IP/ที่ตั้งได้"; return; }
+        net.innerHTML = `
+          🔢 IP: ${ip}<br>📍 ประเทศ: ${info.country} (${info.countryCode}) • เมือง: ${info.city}<br>
+          🌍 ISP: ${info.isp} • AS: ${info.as}<br>⏱️ Timezone: ${info.timezone}
+        `;
+      }).catch(()=> { const net=$("#clientNetwork"); if(net) net.textContent="ไม่สามารถเชื่อมต่อบริการ IP ได้"; });
+    },{threshold:.25});
+    const clientBox=document.getElementById('clientBox'); if(clientBox) obs.observe(clientBox);
+
+    // Cyber World fetchers
+    async function fetchHN(){
+      const url='https://hn.algolia.com/api/v1/search_by_date?query=security%20OR%20cybersecurity%20OR%20CVE&tags=story&hitsPerPage=12';
+      const r=await fetch(url); return r.json().then(d=> d.hits.map(h=>({title:h.title,url:h.url||('https://news.ycombinator.com/item?id='+h.objectID),source:'Hacker News',time:h.created_at})) );
+    }
+    async function fetchGithubSec(){
+      const r=await fetch('https://api.github.com/search/repositories?q=security+in:topics,description&sort=updated&order=desc&per_page=12');
+      const d=await r.json(); if(!d.items) return [];
+      return d.items.map(x=>({title:`Repo: ${x.full_name}`,url:x.html_url,source:'GitHub',time:x.updated_at}));
+    }
+    async function loadNews(){
+      const grid=$("#newsGrid"); if(!grid) return;
+      try{
+        const [a,b] = await Promise.allSettled([fetchHN(), fetchGithubSec()]);
+        let items=[];
+        if(a.status==='fulfilled') items=items.concat(a.value);
+        if(b.status==='fulfilled') items=items.concat(b.value);
+        if(items.length===0){ grid.innerHTML='<div class="text-gray-300">ยังไม่สามารถดึงข่าวได้ ลองรีเฟรชอีกครั้ง</div>'; return; }
+        items=items.slice(0,18);
+        grid.innerHTML = items.map(it=>`
+          <a class="card bg-gray-800 rounded-xl p-5 block hover:bg-gray-700/60" href="${it.url}" target="_blank" rel="noopener">
+            <div class="text-xs text-emerald-300 mb-1">${it.source}</div>
+            <div class="font-semibold">${it.title || 'Untitled'}</div>
+            <div class="text-xs text-gray-400 mt-2">${it.time? new Date(it.time).toLocaleString() : ''}</div>
+          </a>
+        `).join('');
+        const vol = Math.min(100, 20 + items.length*3);
+        updateSeverity(vol);
+      }catch(e){
+        grid.innerHTML='<div class="text-gray-300">เกิดข้อผิดพลาดในการดึงข้อมูล</div>';
+      }
+    }
+    loadNews();
+
+    function updateSeverity(pct){
+      const bar=$("#sevBar"), label=$("#sevLabel");
+      if(!bar||!label) return;
+      bar.style.width = pct+"%";
+      let level = pct<30?'ต่ำ (Low)': pct<60?'ปานกลาง (Moderate)': pct<85?'สูง (High)':'วิกฤต (Critical)';
+      label.textContent = `ดัชนีภัยไซเบอร์ทั่วโลก: ${level} – ${pct}%`;
+      $("#m1").textContent = Math.round(pct*0.6)+'%';
+      $("#m2").textContent = Math.round(pct*0.55)+'%';
+      $("#m3").textContent = Math.round(pct*0.35)+'%';
+      $("#m4").textContent = Math.round(pct*0.4)+'%';
+    }
+
+    
+    // ---------- Globe.gl only ----------
+    function bootGlobeGl(){
+      try{
+        const wrap=document.getElementById('globeContainer'); const el=document.getElementById('globe');
+        if(!wrap||!el) return false;
+        const world = Globe()
+          .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
+          .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+          .backgroundColor('rgba(0,0,0,0)')
+          .showAtmosphere(true)
+          .atmosphereColor('#16a34a')
+          .atmosphereAltitude(0.18)
+          .arcsData([])
+          .arcColor(() => ['rgba(14,165,233,0.75)','rgba(16,185,129,0.95)'])
+          .arcAltitude(() => Math.random()*0.35+0.05)
+          .arcStroke(0.6)
+          .arcDashLength(0.32)
+          .arcDashGap(0.015)
+          .arcDashAnimateTime(() => 1800 + Math.random()*1200)
+          (el);
+        const controls = world.controls(); controls.autoRotate=true; controls.autoRotateSpeed=0.45;
+        function fit(){ const w=wrap.clientWidth,h=wrap.clientHeight; world.width(w); world.height(h); }
+        window.addEventListener('resize', fit); fit();
+        function gen(){ const arcs=[]; const pts=[
+          {lat:13.7563,lng:100.5018},{lat:1.3521,lng:103.8198},{lat:35.6762,lng:139.6503},{lat:51.5072,lng:-0.1276},
+          {lat:40.7128,lng:-74.0060},{lat:25.2048,lng:55.2708},{lat:-33.8688,lng:151.2093}
+        ]; for(let i=0;i<3;i++){ const s=pts[Math.floor(Math.random()*pts.length)],t=pts[Math.floor(Math.random()*pts.length)]; if(s!==t) arcs.push({startLat:s.lat,startLng:s.lng,endLat:t.lat,endLng:t.lng}); } return arcs; }
+        setInterval(()=>{ world.arcsData(gen()); },1300);
+        return true;
+      }catch(e){ return false; }
+    }
+    (function(){ const ok = bootGlobeGl(); if(!ok){ document.getElementById('globeFallback')?.classList.remove('hidden'); } })();
+    // ---------- /Globe.gl ----------
+
+// Hamburger slide menu
+on($("#hamb"),'click',()=>{
+  const m=$("#slideMenu"); if(!m) return; m.style.transform = 'translateX(0)';
+});
+on(document,'click',(e)=>{
+  const m=$("#slideMenu"); const b=$("#hamb"); if(!m) return;
+  if(!m.contains(e.target) && e.target!==b && m.style.transform==='translateX(0px)'){
+    m.style.transform='translateX(100%)';
+  }
+});
+$$('#slideMenu a').forEach(a=> on(a,'click',()=>{ const m=$("#slideMenu"); if(m) m.style.transform='translateX(100%)'; }));
+
+// Toggle Cyber news
+on($("#newsToggle"),'click',()=>{
+  const w=$("#newsWrap");
+  if(!w) return;
+  const hidden=w.classList.contains('hidden');
+  w.classList.toggle('hidden');
+  $("#newsToggle").textContent = hidden ? "ซ่อนข่าว" : "แสดงข่าวทั้งหมด";
+});
+
+// Mobile Security checks
+function mobileSecurity(){
+  const el=$("#mobileSec"); if(!el) return;
+  const ua=navigator.userAgent||"";
+  const isAndroid=/Android\s([\d\.]+)/.exec(ua);
+  const isIOS=/iPhone OS (\d+)_?(\d+)?/.exec(ua) || /iPad OS (\d+)_?(\d+)?/.exec(ua);
+  const isMobile=/Android|iPhone|iPad|iPod/i.test(ua);
+  const https = location.protocol==='https:';
+  const sw = 'serviceWorker' in navigator;
+  const notif = 'Notification' in window ? Notification.permission : 'unsupported';
+  let os='Desktop', version='—';
+  if(isAndroid){ os='Android'; version=isAndroid[1]; }
+  if(isIOS){ os='iOS'; version=(isIOS[1]||'') + (isIOS[2]?'.'+isIOS[2]:''); }
+  const outdated = (os==='Android' && parseInt((version||'0').split('.')[0])<10) || (os==='iOS' && parseInt((version||'0').split('.')[0])<14);
+  const tips=[];
+  if(!https) tips.push('ควรใช้งานผ่าน HTTPS เสมอ');
+  if(outdated) tips.push('อัปเดตระบบปฏิบัติการเวอร์ชันล่าสุด');
+  if(notif==='granted') tips.push('ตรวจสอบแอปที่ร้องขอการแจ้งเตือน');
+  if(!sw) tips.push('อัปเดตเบราว์เซอร์ให้รองรับ Service Worker เพื่อความปลอดภัย/ประสิทธิภาพ');
+  el.innerHTML = `
+    📱 อุปกรณ์: ${os} ${version} ${isMobile?'(mobile)':'(desktop)'}<br>
+    🔒 การเชื่อมต่อ: ${https?'<span class="text-emerald-300 font-semibold">HTTPS</span>':'<span class="text-red-300 font-semibold">ไม่ใช่ HTTPS</span>'}<br>
+    🧩 Service Worker: ${sw?'รองรับ':'ไม่รองรับ'} • 🔔 Notifications: ${notif}<br>
+    ⚠️ สถานะโดยรวม: ${outdated?'<span class="text-amber-300">อาจเก่า ควรอัปเดต</span>':'<span class="text-emerald-300">ปกติ</span>'}<br>
+    ${tips.length? ('🛡️ คำแนะนำ: ' + tips.join(' • ')) : '🛡️ ไม่มีคำแนะนำเพิ่มเติม'}
+  `;
+}
+mobileSecurity();
+
+    
+  </script>
+</body>
+</html>
