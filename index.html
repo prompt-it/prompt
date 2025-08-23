@@ -81,9 +81,85 @@
     details.faq[open]{box-shadow:0 8px 28px rgba(0,0,0,.25)}
   .reveal{opacity:0;transform:translateY(10px);transition:opacity .6s ease, transform .6s ease}
 .reveal.on{opacity:1;transform:none}
+
+/* === Hacker Formal theme extras === */
+body:before{content:"";position:fixed;inset:-2px;background:
+  linear-gradient(transparent 60%, rgba(22,163,74,.05)),
+  radial-gradient(1200px 600px at 10% 10%, rgba(14,165,233,.08), transparent 40%),
+  radial-gradient(1000px 500px at 90% 90%, rgba(16,185,129,.08), transparent 40%);
+pointer-events:none; z-index:-1}
+/* animated grid lines */
+.hacker-grid{position:fixed;inset:0;z-index:-1;background:
+  linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px) 0 0/60px 60px,
+  linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px) 0 0/60px 60px;
+mask-image:linear-gradient(180deg, transparent, #000 20%, #000 80%, transparent);
+animation:gridShift 40s linear infinite}
+@keyframes gridShift{to{background-position:1200px 1200px, 0 0}}
+/* scanlines */
+.scanlines:before{content:"";position:fixed;inset:0;background:
+  repeating-linear-gradient(to bottom, rgba(255,255,255,.03) 0 2px, transparent 2px 4px);
+pointer-events:none; mix-blend-mode:soft-light; z-index:0}
+/* tool category buttons */
+.tool-tabs button{border:1px solid rgba(255,255,255,.15);background:rgba(17,24,39,.6)}
+.tool-tabs button.active{background:linear-gradient(90deg,var(--brand),var(--brand2)); color:#fff}
+/* new cards hover ring */
+.card.holo{border-image:linear-gradient(90deg, rgba(16,185,129,.6), rgba(14,165,233,.6)) 1}
+
+
+/* === Compact Nation Status (mobile-first) === */
+section#nation{padding-top:2rem !important; padding-bottom:2rem !important;}
+#nation .grid{gap:1rem !important}
+#nation .card{padding:.75rem !important}
+#nation .meter{height:12px !important}
+#nation #sevBar{height:100%}
+#globeContainer{height:360px}
+@media (max-width: 1024px){
+  #globeContainer{height:320px}
+}
+@media (max-width: 768px){
+  #globeContainer{height:260px}
+  #nation .text-2xl{font-size:1.25rem}
+  #nation .text-xl{font-size:1.05rem}
+  #nation select, #nation button{transform:translateZ(0)} /* avoid reflow flicker */
+}
+/* compact section dividers */
+section.compact-pad{padding-top:2rem !important; padding-bottom:2rem !important;}
+
+
+/* === Extra Compact Nation Status tweaks === */
+#nation{padding-top:1.5rem!important; padding-bottom:1.5rem!important;}
+#nation h3{font-size:1.25rem!important}
+#nation h4{font-size:1.1rem!important}
+#nation p{font-size:.85rem!important; line-height:1.3}
+#nation .card{padding:.5rem!important}
+#nation .grid{gap:.5rem!important}
+#nation .meter{height:10px!important}
+#globeContainer{height:280px; max-height:45vh; overflow:hidden}
+@media(max-width:768px){
+  #globeContainer{height:220px; max-height:40vh}
+}
+
+
+/* === Ultra-Compact mode for #nation === */
+#nation.ultra{padding-top:1rem!important; padding-bottom:1rem!important}
+#nation.ultra h3{font-size:1.1rem!important}
+#nation.ultra p{display:none}
+#nation.ultra .grid{gap:.5rem!important}
+#nation.ultra .card{padding:.5rem!important}
+#nation.ultra .meter{height:8px!important}
+#nation.ultra #globeContainer{display:none!important}
+#nation.ultra .text-sm{font-size:.8rem!important}
+#nation.ultra select, #nation.ultra button{padding:.35rem .5rem!important; font-size:.8rem!important}
+#nation.ultra #sevLabel{font-size:.8rem!important}
+#nation.ultra .grid-cols-2, #nation.ultra .md\:grid-cols-4{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+@media(max-width:768px){
+  /* force ultra automatically for small screens via class added by JS */
+}
+
 </style>
 </head>
-<body>
+<body class="scanlines">
+<div class="hacker-grid"></div>
 <canvas id="particles" style="position:fixed;inset:0;z-index:-1;opacity:.18"></canvas>
 
   <div id="progressBar"></div>
@@ -96,12 +172,10 @@
       <a href="#welcome" class="hover:text-white">หน้าแรก</a>
       <a href="#courses" class="hover:text-white">คอร์ส</a>
       <a href="#tools" class="hover:text-white">เครื่องมือ</a>
-      <a href="#world-cyber" class="hover:text-white">Cyber รอบโลก</a>
       <a href="#payment" class="hover:text-white">ชำระเงิน</a>
       <a href="#client-info" class="hover:text-white">ข้อมูลอุปกรณ์</a>
       <a href="#contact" class="hover:text-white">ติดต่อ</a>
     </nav>
-<button id="hamb" class="md:hidden ml-2 px-3 py-2 rounded-md border border-white/20 text-white/90">☰</button>
     <!-- Top-right "ดูสินค้า" button (visible on all screens) -->
     <a href="products.html" class="ml-4 px-4 py-2 rounded-md btn-solid text-white font-semibold">ดูสินค้า</a>
   </header>
@@ -112,7 +186,6 @@
     <a href="#services" class="block px-4 py-2 hover:bg-white/5">บริการ</a>
     <a href="#courses" class="block px-4 py-2 hover:bg-white/5">คอร์ส</a>
     <a href="#tools" class="block px-4 py-2 hover:bg-white/5">เครื่องมือ</a>
-    <a href="#world-cyber" class="block px-4 py-2 hover:bg-white/5">Cyber รอบโลก</a>
     <a href="#payment" class="block px-4 py-2 hover:bg-white/5">ชำระเงิน</a>
     <a href="#client-info" class="block px-4 py-2 hover:bg-white/5">ข้อมูลอุปกรณ์</a>
     <a href="products.html" class="block px-4 py-2 hover:bg-white/5">สินค้า</a>
@@ -159,6 +232,70 @@
 
   <!-- Divider -->
   <section class="px-6 md:px-10"><hr class="border-t border-emerald-700/40 my-10"></section>
+  <!-- Divider -->
+  <section class="px-6 md:px-10"><hr class="border-t border-emerald-700/40 my-10"></section>
+
+  <!-- National Cybersecurity Status -->
+  <section id="nation" class="px-6 md:px-10 py-12">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-8 items-start">
+        <div>
+          <div class="flex items-center justify-between gap-3"><h3 class="text-2xl font-bold title-underline">สถานะความปลอดภัยทางไซเบอร์ระดับประเทศ</h3><button id="nationCompactToggle" class="px-3 py-1 rounded-md border border-white/20 text-white/90 hover:bg-white/5 text-xs">โหมดกะทัดรัด</button></div>
+          <p class="text-gray-300 mt-2">โหมดประเมินอัตโนมัติอาศัยสัญญาณสาธารณะ (CVE/กิจกรรมชุมชน) หากดึงข้อมูลไม่ได้จะใช้ค่าเริ่มต้นของประเทศ</p>
+          <div class="mt-4 grid sm:grid-cols-2 gap-3">
+            <div class="card rounded-xl p-4 holo">
+              <label class="text-sm text-gray-300">ประเทศ</label>
+              <select id="nationSelect" class="w-full mt-1 px-3 py-2 rounded text-black">
+                <option value="TH">Thailand (TH)</option>
+                <option value="SG">Singapore (SG)</option>
+                <option value="US">United States (US)</option>
+                <option value="JP">Japan (JP)</option>
+                <option value="GB">United Kingdom (GB)</option>
+                <option value="AU">Australia (AU)</option>
+                <option value="AE">United Arab Emirates (AE)</option>
+              </select>
+            </div>
+            <div class="card rounded-xl p-4 holo">
+              <label class="text-sm text-gray-300">โหมด</label>
+              <div class="mt-1 flex gap-2">
+                <button id="btnAutoAssess" class="px-4 py-2 rounded-md btn-solid text-white font-semibold">ประเมินอัตโนมัติ</button>
+                <button id="btnResetAssess" class="px-4 py-2 rounded-md border border-white/20 text-white/90 hover:bg-white/5">รีเซ็ต</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <div class="flex items-center justify-between">
+              <div class="chip">ดัชนีภัยไซเบอร์</div>
+              <div id="sevLabel" class="text-sm text-gray-300">กำลังประเมิน…</div>
+            </div>
+            <div class="meter mt-3"><div id="sevBar"></div></div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 text-sm">
+              <div class="card rounded-xl p-3"><div class="text-gray-400">Phishing</div><div id="m1" class="font-bold text-emerald-300">—</div></div>
+              <div class="card rounded-xl p-3"><div class="text-gray-400">Ransomware</div><div id="m2" class="font-bold text-emerald-300">—</div></div>
+              <div class="card rounded-xl p-3"><div class="text-gray-400">Vuln. Activity</div><div id="m3" class="font-bold text-emerald-300">—</div></div>
+              <div class="card rounded-xl p-3"><div class="text-gray-400">Fraud/Scam</div><div id="m4" class="font-bold text-emerald-300">—</div></div>
+            </div>
+          </div>
+
+          <details class="faq mt-5"><summary><b>ข้อมูลสถาบันที่เกี่ยวข้อง (ตามประเทศ)</b></summary>
+            <div id="nationRefs" class="p-4 pt-0 text-gray-300 text-sm">
+              เลือกประเทศเพื่อดูช่องทาง CERT/หน่วยงานรัฐ
+            </div>
+          </details>
+        </div>
+
+        <div>
+          <div id="globeContainer">
+            <div id="globe"></div>
+            <div id="globeFallback" class="hidden">แผนที่โต้ตอบไม่รองรับในอุปกรณ์นี้</div>
+            <div id="globeOverlay">Live Arcs • demo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 
   <!-- Services: Coding & Backend Security -->
   <section id="services" class="px-6 md:px-10 py-12">
@@ -271,6 +408,13 @@
   <section id="tools" class="px-6 md:px-10 py-10">
     <div class="max-w-6xl mx-auto">
       <h3 class="text-2xl font-bold title-underline">เครื่องมือ Cyber</h3>
+<div class="tool-tabs mt-4 flex flex-wrap gap-2">
+  <button data-tab="all" class="px-3 py-2 rounded-md text-sm active">ทั้งหมด</button>
+  <button data-tab="security" class="px-3 py-2 rounded-md text-sm">Security</button>
+  <button data-tab="encode" class="px-3 py-2 rounded-md text-sm">Encode/Decode</button>
+  <button data-tab="network" class="px-3 py-2 rounded-md text-sm">Network</button>
+  <button data-tab="utils" class="px-3 py-2 rounded-md text-sm">Utils</button>
+</div>
 
       <!-- Right-side floating quick menu -->
       <nav id="toolQuickMenu" aria-label="Tool quick jump">
@@ -280,10 +424,9 @@
         <a href="#tool-ip">IP</a>
         <a href="#tool-phone">Phone</a>
       </nav>
-<button id="hamb" class="md:hidden ml-2 px-3 py-2 rounded-md border border-white/20 text-white/90">☰</button>
 
       <!-- Hash -->
-      <div id="tool-hash" class="mt-8">
+      <div id="tool-hash" class="mt-8" data-cat="security encode">
         <h4 class="text-xl font-semibold text-emerald-300">🔑 Hash Generator</h4>
         <input id="hashInput" class="w-full md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder="ข้อความ">
         <button id="btnHash" class="mt-3 px-5 py-2 rounded-md btn-solid text-white font-semibold">Generate</button>
@@ -292,7 +435,7 @@
       <hr class="border-t border-emerald-700/40 my-8">
 
       <!-- Base64 -->
-      <div id="tool-base64">
+      <div id="tool-base64" data-cat="encode">
         <h4 class="text-xl font-semibold text-emerald-300">🔐 Base64 Encode / Decode</h4>
         <textarea id="b64Input" class="w-full md:w-2/3 lg:w-1/2 h-28 px-4 py-2 rounded text-black mt-3"></textarea>
         <div class="mt-3 flex gap-2">
@@ -304,7 +447,7 @@
       <hr class="border-t border-emerald-700/40 my-8">
 
       <!-- Password Strength -->
-      <div id="tool-password">
+      <div id="tool-password" data-cat="security">
         <h4 class="text-xl font-semibold text-emerald-300">🕵️ Password Strength Checker</h4>
         <div class="mt-3 grid md:grid-cols-2 gap-3 items-end">
           <input type="password" id="passwordInput" class="w-full px-4 py-2 rounded text-black" placeholder="รหัสผ่าน">
@@ -317,7 +460,7 @@
       <hr class="border-t border-emerald-700/40 my-8">
 
       <!-- IP Checker (manual) -->
-      <div id="tool-ip">
+      <div id="tool-ip" data-cat="network">
         <h4 class="text-xl font-semibold text-emerald-300">🌐 IP Checker (ระบุ IP เอง)</h4>
         <input id="ipInput" class="w-full md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder="8.8.8.8">
         <button id="btnIP" class="mt-3 px-5 py-2 rounded-md btn-solid text-white font-semibold">ตรวจสอบ</button>
@@ -326,41 +469,107 @@
       <hr class="border-t border-emerald-700/40 my-8">
 
       <!-- Phone Checker -->
-      <div id="tool-phone">
+      <div id="tool-phone" data-cat="network utils">
         <h4 class="text-xl font-semibold text-emerald-300">📱 Phone Checker</h4>
         <input id="phoneInput" class="w-full md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder="0812345678">
         <button id="btnPhone" class="mt-3 px-5 py-2 rounded-md btn-solid text-white font-semibold">ตรวจสอบ</button>
         <div id="phoneResult" class="mt-3 text-gray-300 text-sm"></div>
 
+      
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- Strong Password Generator -->
+      <div id="tool-passgen" data-cat="security utils">
+        <h4 class="text-xl font-semibold text-emerald-300">🔒 Strong Password Generator</h4>
+        <div class="mt-3 grid md:grid-cols-4 gap-3 items-end">
+          <label>ความยาว <input type="number" id="pgLen" min="8" max="64" value="16" class="w-full mt-1 px-3 py-2 rounded text-black"></label>
+          <label><input type="checkbox" id="pgUpper" checked> A‑Z</label>
+          <label><input type="checkbox" id="pgLower" checked> a‑z</label>
+          <label><input type="checkbox" id="pgNum" checked> 0‑9</label>
+          <label class="md:col-span-2"><input type="checkbox" id="pgSym" checked> สัญลักษณ์ !@#$...</label>
+        </div>
+        <div class="mt-3 flex gap-2">
+          <button id="btnGenPW" class="px-4 py-2 rounded-md btn-solid text-white font-semibold">Generate</button>
+          <button id="btnCopyPW" class="px-4 py-2 rounded-md border border-white/20 text-white/90 hover:bg-white/5">Copy</button>
+        </div>
+        <div id="pgOut" class="mt-3 text-lg font-mono text-emerald-300 break-all"></div>
       </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- UUID v4 -->
+      <div id="tool-uuid" data-cat="utils">
+        <h4 class="text-xl font-semibold text-emerald-300">🧬 UUID v4</h4>
+        <button id="btnUUID" class="mt-3 px-4 py-2 rounded-md btn-solid text-white font-semibold">สร้าง UUID</button>
+        <div id="uuidOut" class="mt-3 text-gray-300 text-sm"></div>
+      </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- QR Code -->
+      <div id="tool-qr" data-cat="utils encode">
+        <h4 class="text-xl font-semibold text-emerald-300">� QR Code Generator</h4>
+        <textarea id="qrInput" class="w-full md:w-2/3 lg:w-1/2 h-28 px-4 py-2 rounded text-black mt-3" placeholder="ใส่ข้อความ/ลิงก์"></textarea>
+        <div class="mt-3 flex gap-2">
+          <button id="btnQR" class="px-4 py-2 rounded-md btn-solid text-white font-semibold">สร้าง QR</button>
+          <button id="btnQRSave" class="px-4 py-2 rounded-md border border-white/20 text-white/90 hover:bg-white/5">บันทึกภาพ</button>
+        </div>
+        <canvas id="qrCanvas" class="mt-3 bg-white rounded p-2"></canvas>
+      </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- JSON Formatter / Validator -->
+      <div id="tool-json" data-cat="utils">
+        <h4 class="text-xl font-semibold text-emerald-300">🧾 JSON Formatter / Validator</h4>
+        <textarea id="jsonIn" class="w-full h-40 md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder='{"hello":"world"}'></textarea>
+        <div class="mt-3 flex gap-2">
+          <button id="btnPrettyJSON" class="px-4 py-2 rounded-md btn-solid text-white font-semibold">Format</button>
+          <button id="btnMinJSON" class="px-4 py-2 rounded-md btn-solid text-white font-semibold">Minify</button>
+        </div>
+        <pre id="jsonOut" class="mt-3 whitespace-pre-wrap text-sm bg-black/40 p-3 rounded border border-white/10"></pre>
+      </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- JWT Decoder (header.payload.signature) -->
+      <div id="tool-jwt" data-cat="security utils encode">
+        <h4 class="text-xl font-semibold text-emerald-300">🪪 JWT Decoder</h4>
+        <textarea id="jwtIn" class="w-full h-28 md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder="eyJhbGciOi..."></textarea>
+        <button id="btnJWT" class="mt-3 px-4 py-2 rounded-md btn-solid text-white font-semibold">Decode</button>
+        <pre id="jwtOut" class="mt-3 whitespace-pre-wrap text-sm bg-black/40 p-3 rounded border border-white/10"></pre>
+      </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- URL Parser -->
+      <div id="tool-url" data-cat="utils network">
+        <h4 class="text-xl font-semibold text-emerald-300">🔗 URL Parser</h4>
+        <input id="urlIn" class="w-full md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder="https://example.com/path?a=1&b=2#hash">
+        <button id="btnURL" class="mt-3 px-4 py-2 rounded-md btn-solid text-white font-semibold">Parse</button>
+        <pre id="urlOut" class="mt-3 whitespace-pre-wrap text-sm bg-black/40 p-3 rounded border border-white/10"></pre>
+      </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- Text Diff (simple) -->
+      <div id="tool-diff" data-cat="utils">
+        <h4 class="text-xl font-semibold text-emerald-300">📄 Text Diff</h4>
+        <div class="grid md:grid-cols-2 gap-3 mt-3">
+          <textarea id="diffA" class="w-full h-40 px-4 py-2 rounded text-black" placeholder="ข้อความ A"></textarea>
+          <textarea id="diffB" class="w-full h-40 px-4 py-2 rounded text-black" placeholder="ข้อความ B"></textarea>
+        </div>
+        <button id="btnDiff" class="mt-3 px-4 py-2 rounded-md btn-solid text-white font-semibold">Compare</button>
+        <pre id="diffOut" class="mt-3 whitespace-pre-wrap text-sm bg-black/40 p-3 rounded border border-white/10"></pre>
+      </div>
+
     </div>
   </section>
 
   <!-- Divider -->
   <section class="px-6 md:px-10"><hr class="border-t border-emerald-700/40 my-10"></section>
 
-<!-- Cyber World News -->
-<section id="world-cyber" class="px-6 md:px-10 py-12">
-  <div class="max-w-6xl mx-auto">
-    <h3 class="text-2xl font-bold title-underline">Cyber รอบโลก</h3>
-    <p class="text-gray-300 mt-1">อัปเดตข่าว/เหตุการณ์ความปลอดภัยไซเบอร์จากหลายแหล่ง</p>
-
-    <button id="newsToggle" class="mt-4 px-4 py-2 rounded-md btn-solid text-white font-semibold">
-      แสดงข่าวทั้งหมด
-    </button>
-
-    <div id="newsWrap" class="mt-4 hidden">
-      <div id="newsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- skeleton (ลบได้ถ้าดึงข่าวจริง) -->
-        <div class="card bg-gray-800 rounded-xl p-5 skeleton h-36"></div>
-        <div class="card bg-gray-800 rounded-xl p-5 skeleton h-36"></div>
-        <div class="card bg-gray-800 rounded-xl p-5 skeleton h-36"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-  <!-- Divider -->
+<!-- Divider -->
   <section class="px-6 md:px-10"><hr class="border-t border-emerald-700/40 my-10"></section>
 
   <!-- Payment (KBank) -->
@@ -395,7 +604,94 @@
         <ul id="slipDetails" class="mt-2 text-gray-200 text-sm space-y-1"></ul>
         <p class="text-xs text-gray-400 mt-2">* ระบบอ่านข้อความจากภาพเพื่อแสดงผลเท่านั้น ไม่บันทึกไฟล์/ข้อมูลใด ๆ</p>
 
+      
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- Strong Password Generator -->
+      <div id="tool-passgen" data-cat="security utils">
+        <h4 class="text-xl font-semibold text-emerald-300">🔒 Strong Password Generator</h4>
+        <div class="mt-3 grid md:grid-cols-4 gap-3 items-end">
+          <label>ความยาว <input type="number" id="pgLen" min="8" max="64" value="16" class="w-full mt-1 px-3 py-2 rounded text-black"></label>
+          <label><input type="checkbox" id="pgUpper" checked> A‑Z</label>
+          <label><input type="checkbox" id="pgLower" checked> a‑z</label>
+          <label><input type="checkbox" id="pgNum" checked> 0‑9</label>
+          <label class="md:col-span-2"><input type="checkbox" id="pgSym" checked> สัญลักษณ์ !@#$...</label>
+        </div>
+        <div class="mt-3 flex gap-2">
+          <button id="btnGenPW" class="px-4 py-2 rounded-md btn-solid text-white font-semibold">Generate</button>
+          <button id="btnCopyPW" class="px-4 py-2 rounded-md border border-white/20 text-white/90 hover:bg-white/5">Copy</button>
+        </div>
+        <div id="pgOut" class="mt-3 text-lg font-mono text-emerald-300 break-all"></div>
       </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- UUID v4 -->
+      <div id="tool-uuid" data-cat="utils">
+        <h4 class="text-xl font-semibold text-emerald-300">🧬 UUID v4</h4>
+        <button id="btnUUID" class="mt-3 px-4 py-2 rounded-md btn-solid text-white font-semibold">สร้าง UUID</button>
+        <div id="uuidOut" class="mt-3 text-gray-300 text-sm"></div>
+      </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- QR Code -->
+      <div id="tool-qr" data-cat="utils encode">
+        <h4 class="text-xl font-semibold text-emerald-300">� QR Code Generator</h4>
+        <textarea id="qrInput" class="w-full md:w-2/3 lg:w-1/2 h-28 px-4 py-2 rounded text-black mt-3" placeholder="ใส่ข้อความ/ลิงก์"></textarea>
+        <div class="mt-3 flex gap-2">
+          <button id="btnQR" class="px-4 py-2 rounded-md btn-solid text-white font-semibold">สร้าง QR</button>
+          <button id="btnQRSave" class="px-4 py-2 rounded-md border border-white/20 text-white/90 hover:bg-white/5">บันทึกภาพ</button>
+        </div>
+        <canvas id="qrCanvas" class="mt-3 bg-white rounded p-2"></canvas>
+      </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- JSON Formatter / Validator -->
+      <div id="tool-json" data-cat="utils">
+        <h4 class="text-xl font-semibold text-emerald-300">🧾 JSON Formatter / Validator</h4>
+        <textarea id="jsonIn" class="w-full h-40 md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder='{"hello":"world"}'></textarea>
+        <div class="mt-3 flex gap-2">
+          <button id="btnPrettyJSON" class="px-4 py-2 rounded-md btn-solid text-white font-semibold">Format</button>
+          <button id="btnMinJSON" class="px-4 py-2 rounded-md btn-solid text-white font-semibold">Minify</button>
+        </div>
+        <pre id="jsonOut" class="mt-3 whitespace-pre-wrap text-sm bg-black/40 p-3 rounded border border-white/10"></pre>
+      </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- JWT Decoder (header.payload.signature) -->
+      <div id="tool-jwt" data-cat="security utils encode">
+        <h4 class="text-xl font-semibold text-emerald-300">🪪 JWT Decoder</h4>
+        <textarea id="jwtIn" class="w-full h-28 md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder="eyJhbGciOi..."></textarea>
+        <button id="btnJWT" class="mt-3 px-4 py-2 rounded-md btn-solid text-white font-semibold">Decode</button>
+        <pre id="jwtOut" class="mt-3 whitespace-pre-wrap text-sm bg-black/40 p-3 rounded border border-white/10"></pre>
+      </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- URL Parser -->
+      <div id="tool-url" data-cat="utils network">
+        <h4 class="text-xl font-semibold text-emerald-300">🔗 URL Parser</h4>
+        <input id="urlIn" class="w-full md:w-2/3 lg:w-1/2 px-4 py-2 rounded text-black mt-3" placeholder="https://example.com/path?a=1&b=2#hash">
+        <button id="btnURL" class="mt-3 px-4 py-2 rounded-md btn-solid text-white font-semibold">Parse</button>
+        <pre id="urlOut" class="mt-3 whitespace-pre-wrap text-sm bg-black/40 p-3 rounded border border-white/10"></pre>
+      </div>
+
+      <hr class="border-t border-emerald-700/40 my-8">
+
+      <!-- Text Diff (simple) -->
+      <div id="tool-diff" data-cat="utils">
+        <h4 class="text-xl font-semibold text-emerald-300">📄 Text Diff</h4>
+        <div class="grid md:grid-cols-2 gap-3 mt-3">
+          <textarea id="diffA" class="w-full h-40 px-4 py-2 rounded text-black" placeholder="ข้อความ A"></textarea>
+          <textarea id="diffB" class="w-full h-40 px-4 py-2 rounded text-black" placeholder="ข้อความ B"></textarea>
+        </div>
+        <button id="btnDiff" class="mt-3 px-4 py-2 rounded-md btn-solid text-white font-semibold">Compare</button>
+        <pre id="diffOut" class="mt-3 whitespace-pre-wrap text-sm bg-black/40 p-3 rounded border border-white/10"></pre>
+      </div>
+
     </div>
   </section>
 
@@ -461,7 +757,12 @@
 
   <!-- Scripts & libs -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script><!-- Fallback Globe.gl -->
+  <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script>
+
+  <script src="https://unpkg.com/three@0.157.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.5/build/qrcode.min.js"></script>
+
 
   <script>
     // Helpers
@@ -682,18 +983,221 @@ on(document,'click',(e)=>{
 });
 $$('#slideMenu a').forEach(a=> on(a,'click',()=>{ const m=$("#slideMenu"); if(m) m.style.transform='translateX(100%)'; }));
 
-// Toggle Cyber news
-  const $ = s => document.querySelector(s);
-  const on = (el, ev, fn) => el && el.addEventListener(ev, fn);
 
-  on($("#newsToggle"), "click", () => {
-    const w = $("#newsWrap");
-    if (!w) return;
-    const hide = w.classList.contains("hidden");
-    w.classList.toggle("hidden");
-    $("#newsToggle").textContent = hide ? "ซ่อนข่าว" : "แสดงข่าวทั้งหมด";
+// ===== Category Tabs =====
+(function(){
+  const tabs = document.querySelectorAll('.tool-tabs button');
+  const blocks = document.querySelectorAll('#tools [data-cat]');
+  function apply(tab){
+    tabs.forEach(b=> b.classList.toggle('active', b===tab));
+    const cat=tab.dataset.tab;
+    blocks.forEach(el=>{
+      if(cat==='all'){ el.style.display=''; return; }
+      const tags=(el.getAttribute('data-cat')||'').split(/\s+/);
+      el.style.display = tags.includes(cat) ? '' : 'none';
+    });
+  }
+  tabs.forEach(b=> b.addEventListener('click',()=>apply(b)));
+  if(tabs[0]) apply(tabs[0]);
+})();
+
+// ===== National Cybersecurity Status =====
+(function(){
+  const refData = {
+    TH: {refs:[
+      'ETDA TH – 1212 OCC ศูนย์รับเรื่องร้องเรียนออนไลน์',
+      'NCSC TH / ThaiCERT – คำแนะนำและแจ้งเหตุ',
+      'กสทช. – สายด่วน 1200 (ภัยออนไลน์บางประเภท)'
+    ], base:62},
+    SG: {refs:['CSA Singapore','SingCERT'], base:48},
+    US: {refs:['CISA / US-CERT','IC3 (FBI)'], base:55},
+    JP: {refs:['JPCERT/CC'], base:50},
+    GB: {refs:['NCSC UK','Action Fraud (0300 123 2040)'], base:52},
+    AU: {refs:['ACSC – ReportCyber'], base:49},
+    AE: {refs:['aeCERT'], base:51}
+  };
+  const sel = document.getElementById('nationSelect');
+  const lbl = document.getElementById('sevLabel');
+  const bar = document.getElementById('sevBar');
+  const m1 = document.getElementById('m1'), m2=document.getElementById('m2'), m3=document.getElementById('m3'), m4=document.getElementById('m4');
+  const refsBox = document.getElementById('nationRefs');
+
+  function setRefs(code){
+    const r = (refData[code]?.refs||[]).map(x=>`• ${x}`).join('<br>');
+    refsBox.innerHTML = r || '—';
+  }
+  function paint(pct){
+    bar.style.width = pct+'%';
+    let level = pct<30?'ต่ำ (Low)': pct<60?'ปานกลาง (Moderate)': pct<85?'สูง (High)':'วิกฤต (Critical)';
+    lbl.textContent = `ดัชนีภัยไซเบอร์: ${level} – ${pct}%`;
+    m1.textContent = Math.round(pct*0.60)+'%';
+    m2.textContent = Math.round(pct*0.55)+'%';
+    m3.textContent = Math.round(pct*0.35)+'%';
+    m4.textContent = Math.round(pct*0.40)+'%';
+  }
+
+  // Try to detect user country to default
+  try{
+    fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(({ip})=>fetch('https://ip-api.com/json/'+ip+'?lang=th'))
+      .then(r=>r.json()).then(d=>{ if(d && d.countryCode && refData[d.countryCode]) sel.value=d.countryCode; setRefs(sel.value); paint((refData[sel.value]?.base||50)); })
+      .catch(()=>{ setRefs(sel.value); paint((refData[sel.value]?.base||50)); });
+  }catch{ setRefs(sel.value); paint((refData[sel.value]?.base||50)); }
+
+  document.getElementById('btnResetAssess')?.addEventListener('click',()=>{
+    paint((refData[sel.value]?.base||50));
+    setRefs(sel.value);
   });
 
-  </script>
+  document.getElementById('btnAutoAssess')?.addEventListener('click', async ()=>{
+    // Heuristic: combine global CVE recent & GitHub security repo updates
+    let score = (refData[sel.value]?.base||50);
+    try{
+      const [cveRes, ghRes] = await Promise.allSettled([
+        fetch('https://cve.circl.lu/api/last'),
+        fetch('https://api.github.com/search/repositories?q=security+in:topics,description&sort=updated&order=desc&per_page=10')
+      ]);
+      if(cveRes.status==='fulfilled'){
+        const n = (await cveRes.value.json()).length || 0; // recent CVEs
+        score += Math.min(25, Math.round(n/10)); // cap
+      }
+      if(ghRes.status==='fulfilled'){
+        const d = await ghRes.value.json();
+        const bump = Array.isArray(d.items) ? Math.min(15, d.items.length) : 0;
+        score += bump;
+      }
+    }catch{}
+    score = Math.max(10, Math.min(98, score));
+    paint(score);
+    setRefs(sel.value);
+  });
+
+  sel.addEventListener('change',()=>{
+    setRefs(sel.value);
+    paint((refData[sel.value]?.base||50));
+  });
+})();
+
+// ===== Globe boot (already defined bootGlobeGl) ensures element exists
+(function(){ setTimeout(()=>{ try{ if(typeof Globe === 'function'){ /* boot defined earlier */ } }catch(e){} }, 0); })();
+
+// ===== New Tools Logic =====
+(function(){
+  // Password generator
+  const rand=(min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+  function genPW(){
+    const len = Math.max(8, Math.min(64, +document.getElementById('pgLen').value||16));
+    const sets = [];
+    if(document.getElementById('pgUpper').checked) sets.push('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+    if(document.getElementById('pgLower').checked) sets.push('abcdefghijklmnopqrstuvwxyz');
+    if(document.getElementById('pgNum').checked) sets.push('0123456789');
+    if(document.getElementById('pgSym').checked) sets.push('!@#$%^&*()-_=+[]{};:,.<>/?');
+    if(sets.length===0) return '';
+    let out = '';
+    // ensure at least one from each set
+    sets.forEach(s=> out += s[rand(0,s.length-1)]);
+    const all = sets.join('');
+    for(let i=out.length;i<len;i++){ out += all[rand(0,all.length-1)]; }
+    // shuffle
+    out = out.split('').sort(()=>Math.random()-0.5).join('');
+    return out;
+  }
+  document.getElementById('btnGenPW')?.addEventListener('click',()=>{
+    const pw = genPW();
+    document.getElementById('pgOut').textContent = pw;
+  });
+  document.getElementById('btnCopyPW')?.addEventListener('click',()=>{
+    const t=document.getElementById('pgOut').textContent||''; if(!t) return;
+    navigator.clipboard.writeText(t);
+  });
+
+  // UUID
+  function uuidv4(){ return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16)); }
+  document.getElementById('btnUUID')?.addEventListener('click',()=>{
+    document.getElementById('uuidOut').textContent = uuidv4();
+  });
+
+  // QR
+  document.getElementById('btnQR')?.addEventListener('click',async()=>{
+    const t = document.getElementById('qrInput').value||''; if(!t) return;
+    const canvas = document.getElementById('qrCanvas');
+    await QRCode.toCanvas(canvas, t, {errorCorrectionLevel:'M', margin:2, scale:6});
+  });
+  document.getElementById('btnQRSave')?.addEventListener('click',()=>{
+    const canvas = document.getElementById('qrCanvas'); if(!canvas) return;
+    const a=document.createElement('a'); a.download='qr.png'; a.href=canvas.toDataURL('image/png'); a.click();
+  });
+
+  // JSON
+  document.getElementById('btnPrettyJSON')?.addEventListener('click',()=>{
+    const t=document.getElementById('jsonIn').value||'';
+    try{ const o=JSON.parse(t); document.getElementById('jsonOut').textContent = JSON.stringify(o,null,2); }
+    catch{ document.getElementById('jsonOut').textContent='❌ JSON ไม่ถูกต้อง'; }
+  });
+  document.getElementById('btnMinJSON')?.addEventListener('click',()=>{
+    const t=document.getElementById('jsonIn').value||'';
+    try{ const o=JSON.parse(t); document.getElementById('jsonOut').textContent = JSON.stringify(o); }
+    catch{ document.getElementById('jsonOut').textContent='❌ JSON ไม่ถูกต้อง'; }
+  });
+
+  // JWT (no verify – decode only)
+  function b64urlToStr(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); const pad = s.length%4? '='.repeat(4-(s.length%4)) : ''; try{return atob(s+pad);}catch{return ''; } }
+  document.getElementById('btnJWT')?.addEventListener('click',()=>{
+    const t=document.getElementById('jwtIn').value||'';
+    const parts=t.split('.'); if(parts.length<2){ document.getElementById('jwtOut').textContent='❌ ไม่ใช่ JWT'; return; }
+    try{
+      const header = JSON.parse(b64urlToStr(parts[0])||'{}');
+      const payload = JSON.parse(b64urlToStr(parts[1])||'{}');
+      document.getElementById('jwtOut').textContent = 'Header:\n'+JSON.stringify(header,null,2)+'\n\nPayload:\n'+JSON.stringify(payload,null,2);
+    }catch{ document.getElementById('jwtOut').textContent='❌ ไม่สามารถถอดรหัส'; }
+  });
+
+  // URL parser
+  document.getElementById('btnURL')?.addEventListener('click',()=>{
+    try{
+      const u = new URL(document.getElementById('urlIn').value);
+      const o = {protocol:u.protocol, host:u.host, hostname:u.hostname, port:u.port, pathname:u.pathname, search:u.search, hash:u.hash, params:Object.fromEntries(u.searchParams.entries())};
+      document.getElementById('urlOut').textContent = JSON.stringify(o,null,2);
+    }catch{ document.getElementById('urlOut').textContent='❌ URL ไม่ถูกต้อง'; }
+  });
+
+  // Diff
+  function diff(a,b){
+    const aa=a.split(/\r?\n/), bb=b.split(/\r?\n/);
+    const n=Math.max(aa.length, bb.length);
+    let out='';
+    for(let i=0;i<n;i++){
+      const A=aa[i]??'', B=bb[i]??'';
+      if(A===B){ out+=`  ${A}\n`; }
+      else{ out+=`- ${A}\n+ ${B}\n`; }
+    }
+    return out;
+  }
+  document.getElementById('btnDiff')?.addEventListener('click',()=>{
+    const a=document.getElementById('diffA').value||'';
+    const b=document.getElementById('diffB').value||'';
+    document.getElementById('diffOut').textContent = diff(a,b);
+  });
+})();
+
+// ===== Hamburger: keep single #hamb and slide menu =====
+// (Already present earlier in file; we removed duplicates)
+
+
+// === Nation Ultra-Compact Mode ===
+(function(){
+  const nation = document.getElementById('nation');
+  const btn = document.getElementById('nationCompactToggle');
+  function applyAuto(){
+    const small = (window.innerWidth <= 820) || (window.innerHeight <= 740);
+    nation.classList.toggle('ultra', small);
+  }
+  applyAuto();
+  window.addEventListener('resize', applyAuto);
+  btn?.addEventListener('click', ()=>{
+    nation.classList.toggle('ultra');
+  });
+})();
+
+</script>
 </body>
 </html>
