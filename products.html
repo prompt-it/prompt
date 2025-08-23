@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Sarabun:wght@300;400;600;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root { --brand:#16a34a; --brand2:#0ea5e9; --ink:#0b1020; }
+    :root { --brand:#16a34a; --brand2:#0ea5e9; --ink:#0b1020; --stickyH: 0px; --fixedH: 0px; }
     html{ scroll-behavior:smooth; }
     body{ font-family:'Sarabun','Inter',system-ui; background: linear-gradient(180deg,#0b1020 0%, #0a0f1a 60%, #070b14 100%); color:#fff }
     .btn-solid{background:linear-gradient(90deg,var(--brand),var(--brand2));}
@@ -21,10 +21,16 @@
     .meter{height:8px;background:#1f2937;border-radius:999px;border:1px solid rgba(255,255,255,.12);overflow:hidden}
     .meter>div{height:100%;width:0%;background:linear-gradient(90deg,#10b981,#f59e0b,#ef4444);transition:width .8s ease}
     .codeband{font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;letter-spacing:.2px}
-    h3[id^="cat-"]{scroll-margin-top:128px}
+    h3[id^="cat-"]{scroll-margin-top:80px}
     /* Sticky filter wrapper (adds own height to prevent overlap) */
-    .sticky-wrap{position:sticky;top:0;z-index:30;background:#0b1020f2;backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.1)}
-  </style>
+    .filter-wrap{background:#0b1020f2;backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.1)}
+  #grid{}
+h3[id^="cat-"]{ scroll-margin-top: 64px; }
+.fixed-bar{position:fixed;top:0;left:0;right:0;z-index:50;background:#0b1020f2;backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.1);box-shadow:0 6px 12px rgba(0,0,0,.25)}
+body{padding-top:var(--fixedH)}
+h3[id^="cat-"]{ scroll-margin-top: calc(var(--fixedH) + 16px); }
+#grid{ padding-top: 0 !important; }
+</style>
 </head>
 <body>
   <header class="p-6 bg-black/60 backdrop-blur flex justify-between items-center border-b border-white/10">
@@ -43,18 +49,16 @@
 
   <main class="px-6 md:px-10 py-8">
     <div class="max-w-7xl mx-auto">
-      <div class="sticky-wrap">
+      <div class="filter-wrap">
+        <!-- Only filter controls stick -->
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 py-3">
           <div>
             <h2 class="text-xl md:text-2xl font-bold title-underline">รายการสินค้าทั้งหมด</h2>
             <p class="text-gray-300 mt-1">รวม <b id="totalCount">0</b> รายการ • กำลังแสดง <b id="shownCount">0</b> รายการ</p>
             <div class="mt-2 text-xs text-emerald-300 codeband">/* สำหรับงานวิจัย/ทดสอบด้านความปลอดภัยเท่านั้น – ใช้อย่างมีจริยธรรมและถูกกฎหมาย */</div>
           </div>
-          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full md:w-auto">
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full md:w-auto">
             <input id="searchInput" class="px-4 py-2 rounded text-black" placeholder="ค้นหาชื่อ/รุ่น...">
-            <select id="categorySelect" class="px-3 py-2 rounded text-black">
-              <option value="">ทุกหมวดหมู่</option>
-            </select>
             <select id="sortSelect" class="px-3 py-2 rounded text-black">
               <option value="popular">เรียง: ความนิยม</option>
               <option value="priceAsc">ราคาต่ำ → สูง</option>
@@ -65,7 +69,7 @@
             <label class="flex items-center gap-2 text-sm text-gray-200"><input id="inStockOnly" type="checkbox"> เฉพาะที่มีสต๊อก</label>
           </div>
           <div id="quickTags" class="mt-2 flex flex-wrap gap-2 text-sm"></div>
-          <div id="catQuickNav" class="mt-2 flex flex-wrap gap-2 text-sm"></div>
+          <div id="catQuickNav" class="flex flex-wrap gap-2 text-sm"></div>
           <div class="mt-3 card rounded-xl p-3">
             <div class="flex items-center justify-between">
               <div>
@@ -75,8 +79,7 @@
               <div class="text-sm text-gray-300">พร้อมขาย <b id="stockReady">0</b> • หมดสต๊อก <b id="stockOOS">0</b></div>
             </div>
           </div>
-        </div>
-      </div>
+        </div></div>
 
       <!-- Products Grid Container (filled by JS) -->
       <div id="grid" class="mt-6"></div>
@@ -146,14 +149,11 @@
     products.splice(103);
 
     // Helpers
-    const catSel = $('#categorySelect');
-    const uniqueCats = [...new Set(products.map(p=>p.category))].sort();
-    for(const c of uniqueCats){ const opt=document.createElement('option'); opt.value=c; opt.textContent=c; catSel.appendChild(opt); }
-
     const quick = $('#quickTags');
     const quickSet = ['ขายดี','ยอดฮิต','ลดราคา','ใหม่','พร้อมส่ง','พรีออเดอร์'];
     let searchTag='';
-    quickSet.forEach(t=>{ const a=document.createElement('button'); a.className='chip hover:bg-white/10'; a.textContent='#'+t; a.onclick=()=>{ searchTag=t; render(); }; quick.appendChild(a); });
+    quickSet.forEach(t=>{ const a=document.createElement('button'); a.className='chip hover:bg-white/10'; a.textContent='#'+t; a.onclick=()=>{ searchTag=t; render();
+    startTicker(); }; quick.appendChild(a); });
     const clearTag=document.createElement('button'); clearTag.className='chip hover:bg-white/10'; clearTag.textContent='ล้างตัวกรองแท็ก'; clearTag.onclick=()=>{ searchTag=''; render(); }; quick.appendChild(clearTag);
 
     function hashCode(str){ let h=0; for(let i=0;i<str.length;i++){ h=(h<<5)-h + str.charCodeAt(i); h|=0; } return Math.abs(h); }
@@ -172,9 +172,9 @@
 
     let searchText='';
     function getFiltered(){
-      const q=searchText.toLowerCase(); const cat=$('#categorySelect').value; const inStockOnly=$('#inStockOnly').checked;
+      const q=searchText.toLowerCase(); const cat=''; // category filter removed const inStockOnly=$('#inStockOnly').checked;
       let items=products.filter(p=> p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
-      if(cat) items=items.filter(p=> p.category===cat);
+      // ปิดตัวกรองหมวดหมู่
       if(searchTag) items=items.filter(p=> p.tag===searchTag);
       if(inStockOnly) items=items.filter(p=> stockOf(p.name)>0);
       const sort=$('#sortSelect').value;
@@ -194,7 +194,10 @@
       const groups={}; for(const p of items){ (groups[p.category]=groups[p.category]||[]).push(p); }
       // build quick category nav
       const catNav=document.getElementById('catQuickNav');
-      catNav.innerHTML = Object.keys(groups).sort().map(c=> `<a href="#cat-${c.replace(/[^a-z0-9]+/gi,'-')}" class="chip hover:bg-white/10">⇢ ${c}</a>`).join('');
+      const cats = Object.keys(groups).sort();
+      const sel = document.getElementById('catJump'); if(sel){ sel.innerHTML='<option value="">— เลือกหมวดหมู่ —</option>' + cats.map(c=>`<option value="${c}">${c}</option>`).join(''); }
+      catNav.innerHTML = cats.map(c=> `<button type="button" data-cat="${c}" class="chip hover:bg-white/10">${c}</button>`).join('');
+      $$('#catQuickNav button').forEach(b=> on(b,'click',()=> jumpToCategory(b.getAttribute('data-cat')) ));
 
       // build html
       let out='';
@@ -226,11 +229,12 @@
             <div class="p-4">
               <div class="text-xs text-gray-400 codeband">${p.category}</div>
               <h3 class="font-semibold text-white mt-1 line-clamp-2">${p.name}</h3>
-              <div class="mt-2 flex items-center justify-between">
-                <div class="text-emerald-300 font-bold">${currency(p.price)}</div>
+              <div class="mt-2 flex items-center justify-between realtime">
+                <div class="text-emerald-300 font-bold"><span id="price-${p.id}">${currency(p.price)}</span> <span id="trend-${p.id}" class="text-xs ml-2"></span></div>
                 ${stockBadge}
               </div>
               <div class="mt-3 flex flex-wrap gap-2">${specs}</div>
+              <div class="mt-2 text-xs text-gray-300">ภาษี: <b id="tax-${p.id}">—</b> • อัปเดต: <span id="time-${p.id}">—</span></div>
               <div class="mt-3 flex gap-2">
                 <button data-id="${p.id}" class="qv px-3 py-2 rounded-md border border-white/20 hover:bg-white/5 text-sm">ดูด่วน</button>
                 <a target="_blank" href="https://www.facebook.com/share/1YxCGFEGvW/" class="px-3 py-2 rounded-md btn-solid text-white text-sm ${stock>0?'':'pointer-events-none opacity-50'}">สั่งซื้อ</a>
@@ -238,7 +242,7 @@
             </div>
           </div>`;
         }
-        out += `</div>`;
+        out += `</div><div class="mt-3"><button class="chip hover:bg-white/10" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ ไปด้านบน</button></div>`;
       }
       grid.innerHTML=out;
 
@@ -258,7 +262,8 @@
           <div>
             <div class="text-xs text-gray-400 codeband">${p.category}</div>
             <h3 class="text-xl font-bold text-white">${p.name}</h3>
-            <div class="mt-1 text-emerald-300 font-bold">${currency(p.price)}</div>
+            <div class="mt-1 text-emerald-300 font-bold realtime">ราคาปัจจุบัน: ${currency(p.price)}</div>
+<div class="text-xs text-gray-400 realtime-tax"></div>
             <p class="mt-2 text-gray-200">${p.desc}</p>
             <div class="mt-2 text-sm">ความอันตราย: <b>${riskLabel(risk)}</b>
               <div class="meter w-full mt-1"><div style="width:${risk}%"></div></div>
@@ -286,6 +291,107 @@
     on($('#categorySelect'),'change',render);
     on($('#sortSelect'),'change',render);
     on($('#inStockOnly'),'change',render);
+
+    
+
+    
+
+// --- Fixed controls bar height -> apply as body padding ---
+function setFixedBarHeight(){
+  const fb=document.querySelector('.fixed-bar');
+  const h = fb ? Math.round(fb.getBoundingClientRect().height) : 0;
+  document.documentElement.style.setProperty('--fixedH', h + 'px');
+}
+window.addEventListener('load', setFixedBarHeight);
+window.addEventListener('resize', setFixedBarHeight);
+window.addEventListener('orientationchange', setFixedBarHeight);
+
+// --- Sticky height guard: ensures filters never cover products ---
+/* function setStickySpace(){
+  const s=document.querySelector('.filter-wrap');
+  const h = s ? Math.round(s.getBoundingClientRect().height) : 0;
+  document.documentElement.style.setProperty('--stickyH', h + 'px');
+}
+/* removed sticky space */
+
+
+
+    
+// ---- Realtime Price & Tax updater ----
+function updateRealtime(){
+  const now=new Date();
+  $$('.realtime').forEach(el=>{
+    const priceEl = el.querySelector('.priceval')||el.querySelector('.font-bold');
+    if(!priceEl) return;
+    let base = parseInt(priceEl.getAttribute('data-base')||0);
+    if(!base){ 
+      base = Math.floor(1000+Math.random()*5000);
+    }
+    let delta = Math.floor((Math.random()-0.5)*100);
+    let newVal = Math.max(100, base+delta);
+    priceEl.setAttribute('data-base', newVal);
+    const trend = delta>=0? '⬆️ ขึ้น':'⬇️ ลง';
+    priceEl.textContent = '฿'+newVal.toLocaleString('th-TH')+' '+trend;
+    // tax info
+    const taxRate = (5+Math.random()*12).toFixed(1);
+    const tEl = el.parentElement.querySelector('.realtime-tax') || el.querySelector('.realtime-tax');
+    if(tEl){ tEl.textContent = `ภาษี: ${taxRate}% • อัปเดต: ${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH')}`; }
+  });
+}
+setInterval(updateRealtime, 5000);
+updateRealtime();
+// ---------------------------------------
+
+    
+// ----- Real-time (simulated) price & tax updates -----
+const priceState = new Map(); // id -> { price, tax, trend }
+function initPricing(){
+  products.forEach(p=>{
+    const base = p.price;
+    const tax = 5 + Math.random()*7; // 5% - 12%
+    priceState.set(p.id, { price: base, tax, trend: 0 });
+  });
+}
+function rnd(min,max){ return Math.random()*(max-min)+min; }
+function updateOne(p){
+  const st = priceState.get(p.id); if(!st) return;
+  // random walk ±1.2%
+  const delta = st.price * rnd(-0.012, 0.012);
+  const newP = Math.max(99, Math.round(st.price + delta));
+  const trend = newP > st.price ? 1 : (newP < st.price ? -1 : 0);
+  // small random tax drift ±0.2%
+  const newTax = Math.max(0, Math.min(20, st.tax + rnd(-0.2, 0.2)));
+  st.price = newP; st.tax = newTax; st.trend = trend;
+  const t = new Date().toLocaleString('th-TH', { hour12:false });
+  // Update card DOM if present
+  const priceEl = document.getElementById('price-'+p.id);
+  const trendEl = document.getElementById('trend-'+p.id);
+  const taxEl = document.getElementById('tax-'+p.id);
+  const timeEl = document.getElementById('time-'+p.id);
+  if(priceEl) priceEl.textContent = currency(st.price);
+  if(trendEl) trendEl.innerHTML = trend===1 ? '⬆︎ แนวโน้มขึ้น' : trend===-1 ? '⬇︎ แนวโน้มลง' : '– คงที่';
+  if(taxEl) taxEl.textContent = st.tax.toFixed(1) + '%';
+  if(timeEl) timeEl.textContent = t;
+  // Update QV if open for this id
+  const qp = document.getElementById('qv-price-'+p.id);
+  const qt = document.getElementById('qv-trend-'+p.id);
+  const qt2 = document.getElementById('qv-tax-'+p.id);
+  const qtime = document.getElementById('qv-time-'+p.id);
+  if(qp) qp.textContent = currency(st.price);
+  if(qt) qt.innerHTML = trend===1 ? '⬆︎ แนวโน้มขึ้น' : trend===-1 ? '⬇︎ แนวโน้มลง' : '– คงที่';
+  if(qt2) qt2.textContent = st.tax.toFixed(1) + '%';
+  if(qtime) qtime.textContent = t;
+}
+function startTicker(){
+  initPricing();
+  // prime first paint
+  products.forEach(updateOne);
+  // update every 7s
+  setInterval(()=>{
+    // update visible subset for efficiency
+    products.forEach(p=> updateOne(p));
+  }, 7000);
+}
 
     // Initial render
     render();
