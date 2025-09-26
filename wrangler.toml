@@ -1,0 +1,6 @@
+name = "flash-receiver-worker"
+main = "worker.js"
+compatibility_date = "2024-05-01"
+
+[vars]
+# ไม่ใส่ค่าที่นี่ ให้ตั้งผ่าน wrangler secret
