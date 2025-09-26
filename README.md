@@ -1,2 +1,0 @@
-# prompt
-Information Technology
